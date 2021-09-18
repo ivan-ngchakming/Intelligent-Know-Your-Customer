@@ -66,18 +66,15 @@ The camera will be activated and the captured images will be stored in `data/Jac
 **Note:** Only one person’s images can be captured at a time.
 
 #### 1.2 Train a Face Recognition Model
-
 ```sh
 python recognition/train.py
 ```
-
-`train.yml` and `labels.pickle` will be created at the current folder.
+`train.yml` and `labels.pickle` will be created at the `./recognition/model` folder.
 
 ### 2. Database Design
 
 #### 2.1 Define Database
-
-**You need to** create tables in `facerecognition.sql`.
+**You need to** create tables using `facerecognition.sql`.      
 Here is a sample code for `Student`.
 
 ```sql
@@ -98,9 +95,9 @@ UNLOCK TABLES;
 
 #### 2.2 Import Database
 
-Open mysql server and import the file `facerecognition.sql`.
+Open mysql server and import the file `recognition/facerecognition.sql`.
+```
 
-```sh
 # login the mysql command
 mysql -u root -p
 
