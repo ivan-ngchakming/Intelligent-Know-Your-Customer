@@ -4,12 +4,19 @@ Face recognition using python and mysql.
 
 *******
 
-## Useage
+## Application Design
+
+See design related files in `./designs`
+
+[designs](./designs)
+
+## Usage
 
 ### Environment
 
 Create virtual environment using Anaconda.
-```
+
+```sh
 conda create -n face python=3.x
 conda activate face
 pip install -r requirements.txt
@@ -25,7 +32,8 @@ pip install -r requirements.txt
 
 You'll obtain an account and password after installation, then you should modify the `faces.py`, with the corresponding
 `user` and `passwd`:
-```
+
+```py
 # create database connection
 myconn = mysql.connector.connect(host="localhost", user="root", passwd="xxxxx", database="facerecognition")
 ```
@@ -45,29 +53,34 @@ python-dotenv will read from the .env file automatically.
 ### 1. Face Recognition
 
 #### 1.1 Collect Face Data
-```
+
+```sh
 """
 user_name = "Jack"   # the name
 NUM_IMGS = 400       # the number of saved images
 """
 python recognition/face_capture.py
 ```
-The camera will be activated and the captured images will be stored in `data/Jack` folder.      
+
+The camera will be activated and the captured images will be stored in `data/Jack` folder.
 **Note:** Only one person’s images can be captured at a time.
 
 #### 1.2 Train a Face Recognition Model
-```
+
+```sh
 python recognition/train.py
 ```
-`train.yml` and `labels.pickle` will be created at the `./recognition/model` folder.
 
+`train.yml` and `labels.pickle` will be created at the current folder.
 
 ### 2. Database Design
 
 #### 2.1 Define Database
-**You need to** create tables using `facerecognition.sql`.      
+
+**You need to** create tables in `facerecognition.sql`.
 Here is a sample code for `Student`.
-```
+
+```sql
 # Create TABLE 'Customer'
 CREATE TABLE `Customer` (
   `customer_id` int NOT NULL,
@@ -84,8 +97,10 @@ UNLOCK TABLES;
 ```
 
 #### 2.2 Import Database
-Open mysql server and import the file `recognition/facerecognition.sql`.
-```
+
+Open mysql server and import the file `facerecognition.sql`.
+
+```sh
 # login the mysql command
 mysql -u root -p
 
@@ -97,20 +112,19 @@ mysql> USE facerecognition;
 mysql> source recognition/facerecognition.sql
 ```
 
-
-
 ### 3. Login Interface
 
 #### 3.1 OpenCV GUI
-```
+
+```sh
 python faces.py
 ```
 
 #### 3.2 PySimpleGUI GUI
-```
+
+```sh
 python faces_gui.py
 ```
 
-The camera will be activated and recognize your face using the pretrained model.    
+The camera will be activated and recognize your face using the pretrained model.
 **You need to** implement other useful functions in this part.
-
