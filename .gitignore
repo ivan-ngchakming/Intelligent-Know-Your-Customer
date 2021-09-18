@@ -1,4 +1,5 @@
 .idea
-data/*
-
+recognition/data/**/
+recognition/model
 .env
+venv
