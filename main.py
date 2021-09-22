@@ -1,20 +1,22 @@
+import os
 import sys
 import threading
-import json
 
+from dotenv import load_dotenv
 from PyQt5.Qt import QUrl
-from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWebChannel import QWebChannel
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 
-from serve_react import serve
+from server.utils.react import serve
+from server.api import Foo, Transactions
+
+load_dotenv()
+
+ENVIRONMENT = os.environ['ENVIRONMENT']
 
 
-ENVIRONMENT = 'development'
-
-
-class HelloWorldHtmlApp(QWebEngineView):
+class WebEngineView(QWebEngineView):
 
     def __init__(self):
         super().__init__()
@@ -26,32 +28,24 @@ class HelloWorldHtmlApp(QWebEngineView):
         else:
             raise Exception(f"Unknown environment configuration: {ENVIRONMENT}")
 
-        # # setup channel
+        # setup channel
         self.channel = QWebChannel()
-        self.channel.registerObject('backend', self)
+        self.channel.registerObject('transactions', Transactions(self))
+        self.channel.registerObject('foo', Foo(self))
         self.page().setWebChannel(self.channel)
 
         self.show()
 
-    @pyqtSlot(str, int, str, result=str)
-    def foo(self, mystr, myint, myobjectjson):
-        print('bar', mystr, myint)
-        myobject = json.loads(myobjectjson)
-
-        print('My Object')
-        for k in myobject:
-            print(k,':', myobject[k])
-        return mystr
-
 
 if __name__ == "__main__":
-
+    # Serve static files build using react
     if ENVIRONMENT == 'production':
         react = threading.Thread(target=serve, daemon=True)
         react.start()
-
+    
+    # Init PyQt application
     app = QApplication(sys.argv)
-    view = HelloWorldHtmlApp()
+    view = WebEngineView()
     view.show()
 
     # Run Application

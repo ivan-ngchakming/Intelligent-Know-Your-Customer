@@ -4,11 +4,16 @@ import './App.css';
 
 function App() {
   const [log, setLog] = useState('null')
+
   const handleClick = () => {
     const student = {name: 'Lucas', school: 'HKU'}
-    window.backend.foo('test', 69, JSON.stringify(student)).then(res => {
+    window.server.foo.foo('test', 69, JSON.stringify(student)).then(res => {
       setLog(res);
     })
+  }
+
+  const handleClick2 = () => {
+    window.server.transactions.example_api();
   }
 
   return (
@@ -18,7 +23,8 @@ function App() {
         <p>
           {log}
         </p>
-        <button onClick={handleClick}>Click Me</button>
+        <button onClick={handleClick}>Foo</button>
+        <button onClick={handleClick2}>Foo 2</button>
         <a
           className="App-link"
           href="https://reactjs.org"

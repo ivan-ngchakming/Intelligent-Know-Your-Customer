@@ -29,12 +29,12 @@
     <!-- PyQt -->
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <script>
-      var backend;
       new QWebChannel(qt.webChannelTransport, function (channel) {
-          backend = channel.objects.backend;
+          window.server = {
+            transactions: channel.objects.transactions,
+            foo: channel.objects.foo,
+          };
       });
-
-      window.backend = backend;
     </script>
   </head>
   <body>
