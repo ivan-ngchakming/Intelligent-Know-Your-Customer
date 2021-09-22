@@ -7,3 +7,4 @@ Pillow
 pysimplegui
 python-dotenv
 tqdm
+PyQtWebEngine
