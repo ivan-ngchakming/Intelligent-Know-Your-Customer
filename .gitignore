@@ -3,3 +3,6 @@ recognition/data/**/
 recognition/model
 .env
 venv
+
+/node_modules
+build
