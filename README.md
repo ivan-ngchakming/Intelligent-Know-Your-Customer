@@ -27,17 +27,17 @@ This is where we store sensitive information that we do not want to include in t
 
 To access variables defined in `.env`, package `python-dotenv` is used.
 
-    ```py
-    from dotenv import load_dotenv
+```py
+from dotenv import load_dotenv
 
-    load_dotenv()
-    ```
+load_dotenv()
+```
 
 Access ENVIRONMENT variable for example
 
-    ```py
-    ENVIRONMENT = os.environ['ENVIRONMENT']
-    ```
+```py
+ENVIRONMENT = os.environ['ENVIRONMENT']
+```
 
 ### React GUI
 
@@ -68,6 +68,7 @@ Access ENVIRONMENT variable for example
 
     ```bash
     python -m venv ./venv
+    ```
 
 3. Activate virtualenv
 
