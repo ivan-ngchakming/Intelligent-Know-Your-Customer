@@ -12,7 +12,6 @@ export default function Login() {
   const webcamRef = React.useRef();
 
   const handleClick = () => {
-    console.log('img height', webcamRef.current.video.offsetHeight)
     const imageSrc = webcamRef.current.getScreenshot();
     const imageBase64 = imageSrc.split(',')[1]
     window.server.auth.login(imageBase64).then(res => {
@@ -21,7 +20,9 @@ export default function Login() {
       if (data.result)
         setFaceLocations(data.result.map(face => face.location));
     })
+    setWebcamHeight(webcamRef.current.video.offsetHeight)
     // history.push('/home');
+    setTimeout(handleClick, 100)
   }
 
   const drawReac = (top_x, top_y, width, height) => {
@@ -54,7 +55,7 @@ export default function Login() {
       <Container component="main" maxWidth="lg">
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 4,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -69,11 +70,12 @@ export default function Login() {
           </Typography>
           
           <Box sx={{ mt: 1 }}>
-            <Box 
+            <Box
               sx={{
                 marginTop: 2, 
                 marginBottom: 2,
                 width: '50vw',
+                height: webcamHeight,
               }}
             >
               <div
