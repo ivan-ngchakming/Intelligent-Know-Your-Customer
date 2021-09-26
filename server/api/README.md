@@ -6,18 +6,17 @@
 
     For example, `server/api/foo.py`
 
-2. Create new PyQt Widget using the following template
+2. Create new PyQt QObject using the following template
 
     Rename Foo to the API group's name and foo to the API's name accordingly.
 
     ```py
     import json
 
-    from PyQt5.QtCore import pyqtSlot
-    from PyQt5.QtWidgets import QWidget
+    from PyQt5.QtCore import pyqtSlot, QObject
 
 
-    class Foo(QWidget):
+    class Foo(QObject):
         def __init__(self, parent=None):
             super().__init__(parent)
 

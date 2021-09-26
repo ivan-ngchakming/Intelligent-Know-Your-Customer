@@ -1,9 +1,11 @@
+import logging
 import http.server
 import socketserver
 
 PORT = 8000
 DIRECTORY = "build"
 
+logger = logging.getLogger(__name__)
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -11,5 +13,5 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
 def serve():
     with socketserver.TCPServer(("", PORT), Handler) as httpd:
-        print("serving at port", PORT)
+        logger.info("serving at port", PORT)
         httpd.serve_forever()
