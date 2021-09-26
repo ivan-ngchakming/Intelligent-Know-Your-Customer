@@ -11,9 +11,11 @@ logger = logging.getLogger(__name__)
 
 ENVIRONMENT = os.environ['ENVIRONMENT']
 
+
 class WebEngineView(QWebEngineView):
-    def __init__(self):
+    def __init__(self, parent=None):
         super().__init__()
+        self.parent = parent
 
         logger.debug(f"Loading react app in {ENVIRONMENT} mode")
         if ENVIRONMENT == 'production':
@@ -23,6 +25,8 @@ class WebEngineView(QWebEngineView):
         else:
             raise Exception(f"Unknown environment configuration: {ENVIRONMENT}")
 
+        self.loadFinished.connect(self.onLoad)
+
         # setup channel
         logger.debug("Setting up channels")
         self.channel = QWebChannel()
@@ -31,12 +35,21 @@ class WebEngineView(QWebEngineView):
         self.page().setWebChannel(self.channel)
         self.page().featurePermissionRequested.connect(self.onFeaturePermissionRequested)
 
-        self.show()
-        logger.debug(f"PyQt WebEngineView finished loaded")
-
     def onFeaturePermissionRequested(self, securityOrigin, feature):
         self.sender().setFeaturePermission(
             securityOrigin,
             feature,
             QWebEnginePage.PermissionGrantedByUser
         )
+
+    def onLoad(self):
+        logger.debug(f"PyQt WebEngineView finished loaded")
+        self.parent.setCurrentWidget(self)
+
+
+class Loader(QWebEngineView):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        with open('public/loader.html', 'r') as f:
+            self.setHtml(f.read())

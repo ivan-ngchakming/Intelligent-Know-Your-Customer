@@ -1,6 +1,10 @@
 import React from 'react';
 import { Button } from '@mui/material';
 
+const buttonStyle = {
+  marginLeft: '10px',
+};
+
 export default function Home() {
 
   const handleClick = () => {
@@ -18,15 +22,15 @@ export default function Home() {
 
   return (
     <div>
-      <Button href="/">
+      <Button href="/" variant="contained" sx={buttonStyle}>
         Logout
       </Button>
 
-      <Button onClick={handleClick}>
+      <Button onClick={handleClick} variant="contained" sx={buttonStyle}>
         Foo
       </Button>
 
-      <Button onClick={handleClick2}>
+      <Button onClick={handleClick2} variant="contained" sx={buttonStyle}>
         Foo 2
       </Button>
     </div>
