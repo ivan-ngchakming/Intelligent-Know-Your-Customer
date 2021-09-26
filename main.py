@@ -8,9 +8,10 @@ from PyQt5.QtWidgets import QApplication
 
 load_dotenv()
 
-from server.engine import WebEngineView
+from server import database
+from server.webengine import WebEngineView
 from server.utils.react import serve
-from server.utils.logging import get_console_handler, get_all_loggers
+from server.utils.logging import get_console_handler
 
 
 ENVIRONMENT = os.environ['ENVIRONMENT']
@@ -25,10 +26,12 @@ if __name__ == "__main__":
         react = threading.Thread(target=serve, daemon=True)
         react.start()
     
+    # Create all mysql database tables
+    database.create_all()
+
     # Init PyQt application
     app = QApplication(sys.argv)
     view = WebEngineView()
-    print(get_all_loggers())
 
     # Run Application
     sys.exit(app.exec_())

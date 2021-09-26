@@ -8,3 +8,4 @@ pysimplegui
 python-dotenv
 tqdm
 PyQtWebEngine
+sqlalchemy
