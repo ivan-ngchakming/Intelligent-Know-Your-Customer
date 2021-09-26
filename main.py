@@ -1,40 +1,22 @@
 import os
 import sys
 import threading
+import logging
 
 from dotenv import load_dotenv
-from PyQt5.Qt import QUrl
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWebChannel import QWebChannel
-from PyQt5.QtWebEngineWidgets import QWebEngineView
-
-from server.utils.react import serve
-from server.api import Foo, Transactions
 
 load_dotenv()
 
+from server.engine import WebEngineView
+from server.utils.react import serve
+from server.utils.logging import get_console_handler, get_all_loggers
+
+
 ENVIRONMENT = os.environ['ENVIRONMENT']
 
-
-class WebEngineView(QWebEngineView):
-
-    def __init__(self):
-        super().__init__()
-
-        if ENVIRONMENT == 'production':
-            self.load(QUrl("http://localhost:8000"))
-        elif ENVIRONMENT == 'development':
-            self.load(QUrl("http://localhost:3000"))
-        else:
-            raise Exception(f"Unknown environment configuration: {ENVIRONMENT}")
-
-        # setup channel
-        self.channel = QWebChannel()
-        self.channel.registerObject('transactions', Transactions(self))
-        self.channel.registerObject('foo', Foo(self))
-        self.page().setWebChannel(self.channel)
-
-        self.show()
+logger = logging.getLogger(__name__)
+logger.addHandler(get_console_handler())
 
 
 if __name__ == "__main__":
@@ -46,7 +28,7 @@ if __name__ == "__main__":
     # Init PyQt application
     app = QApplication(sys.argv)
     view = WebEngineView()
-    view.show()
+    print(get_all_loggers())
 
     # Run Application
     sys.exit(app.exec_())
