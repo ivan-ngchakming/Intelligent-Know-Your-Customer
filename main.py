@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QApplication
 load_dotenv()
 
 from server import database
-from server.webengine import WebEngineView
+from server.window import Window
 from server.utils.react import serve
 from server.utils.logging import get_console_handler
 
@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     # Init PyQt application
     app = QApplication(sys.argv)
-    view = WebEngineView()
+    view = Window()
 
     # Run Application
     sys.exit(app.exec_())
