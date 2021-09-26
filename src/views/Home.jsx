@@ -19,9 +19,11 @@ export default function Home() {
     console.log("Clicked Foo 2");
     window.server.transactions.example_api();
   }
-
+  
   return (
     <div>
+      <h1>Home</h1>
+      <br />
       <Button href="/" variant="contained" sx={buttonStyle}>
         Logout
       </Button>

@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import BottomAppBar from './components/ButtomAppBar';
 import Login from './views/Login';
 import Home from './views/Home';
 
@@ -16,10 +18,13 @@ function App() {
   return (
     <div>
       <ThemeProvider theme={theme}>
+      <CssBaseline />
         <Router>
           <Switch>
             <Route path="/" exact component={Login} />
-            <Route path="/home" exact component={Home} />
+            <BottomAppBar>  
+              <Route path="/home" exact component={Home} />
+            </BottomAppBar>
           </Switch>
         </Router>
       </ThemeProvider>
