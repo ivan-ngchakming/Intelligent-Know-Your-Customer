@@ -11,18 +11,25 @@ export default function Login() {
   const [faceLocations, setFaceLocations] = useState([]);
   const webcamRef = React.useRef();
 
-  const handleClick = () => {
+  const streamVideo = () => {
     const imageSrc = webcamRef.current.getScreenshot();
-    const imageBase64 = imageSrc.split(',')[1]
-    window.server.auth.login(imageBase64).then(res => {
-      const data = JSON.parse(res)
-      console.log(data)
-      if (data.result)
-        setFaceLocations(data.result.map(face => face.location));
-    })
-    setWebcamHeight(webcamRef.current.video.offsetHeight)
+    if (imageSrc) {
+      const imageBase64 = imageSrc.split(',')[1]
+      window.server.auth.login(imageBase64).then(res => {
+        const data = JSON.parse(res)
+        console.log(data)
+        if (data.result)
+          setFaceLocations(data.result.map(face => face.location));
+      })
+      setWebcamHeight(webcamRef.current.video.offsetHeight)
+    }
+    
     // history.push('/home');
     setTimeout(handleClick, 100)
+  }
+
+  const handleClick = () => {
+    streamVideo()
   }
 
   const drawReac = (top_x, top_y, width, height) => {
@@ -46,8 +53,15 @@ export default function Login() {
     )
   }
 
+  const handleImageResize = (rect) => {
+    console.log("Image resized", rect, webcamRef)
+    if (webcamRef.current) {
+      setWebcamHeight(webcamRef.current.video.offsetHeight);
+    }
+  }
+
   useEffect(() => {
-    setWebcamHeight(webcamRef.current.video.offsetHeight);
+    streamVideo();
   }, [])
 
   return (
