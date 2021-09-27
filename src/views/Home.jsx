@@ -10,14 +10,16 @@ export default function Home() {
   const handleClick = () => {
     console.log("Clicked Foo 1");
     const student = {name: 'Lucas', school: 'HKU'}
-    window.server.foo.foo('test', 69, JSON.stringify(student)).then(res => {
+    window.server.foo.foo(JSON.stringify(student)).then(res => {
       console.log(res);
     })
   }
 
   const handleClick2 = () => {
     console.log("Clicked Foo 2");
-    window.server.transactions.example_api();
+    window.server.foo.foo2(JSON.stringify({x: 'data'})).then(res => {
+      console.log(JSON.parse(res))
+    });
   }
   
   return (
