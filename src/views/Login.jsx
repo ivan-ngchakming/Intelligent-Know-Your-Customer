@@ -1,38 +1,56 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from "react-router-dom";
-import { Avatar, Button, Link, Grid, Box, Typography, Container } from '@mui/material';
+import { Avatar, Box, Typography, Container } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Webcam from "react-webcam";
+import ResizeObserver from 'react-resize-observer';
+
+const CONFIDENCE = 60
 
 export default function Login() {
   const history = useHistory();
   const [init, setInit] = useState(false);
   const [webcamHeight, setWebcamHeight] = useState(0);
   const [faceLocations, setFaceLocations] = useState([]);
+  const [msg, setMsg] = useState('Detecting Face...');
+  const [msg2, setMsg2] = useState('')
   const webcamRef = React.useRef();
 
-  const streamVideo = () => {
-    const imageSrc = webcamRef.current.getScreenshot();
+  const streamVideo = useCallback(() => {
+    var timer;
+    let imageSrc;
+
+    try {
+      imageSrc = webcamRef.current.getScreenshot();
+    } catch (e) {
+      console.error(e)
+    }
+      
     if (imageSrc) {
       const imageBase64 = imageSrc.split(',')[1]
       window.server.auth.login(imageBase64).then(res => {
         const data = JSON.parse(res)
         console.log(data)
-        if (data.result)
+        if (data.result) {
           setFaceLocations(data.result.map(face => face.location));
+          data.result.forEach(face => {
+            console.log(face)
+            if (face.confidence > CONFIDENCE) {
+              setMsg("Login Success!");
+              setMsg2("Taking you to Home page...")
+              clearTimeout(timer);
+              setTimeout(() => {
+                history.push('/home');
+              }, 1000)
+            }
+          });
+        } 
       })
-      setWebcamHeight(webcamRef.current.video.offsetHeight)
     }
-    
-    // history.push('/home');
-    setTimeout(handleClick, 100)
-  }
+    timer = setTimeout(streamVideo, 100);
+  }, [history])
 
-  const handleClick = () => {
-    streamVideo()
-  }
-
-  const drawReac = (top_x, top_y, width, height) => {
+  const drawReac = (top_x, top_y, width, height, index) => {
     const _width = width;
     const _height = height;
     const _left = top_x;
@@ -40,6 +58,7 @@ export default function Login() {
 
     return (
       <div
+        key={index}
         style={{
           border: `1px solid red`,
           position: 'absolute',
@@ -53,16 +72,18 @@ export default function Login() {
     )
   }
 
-  const handleImageResize = (rect) => {
-    console.log("Image resized", rect, webcamRef)
+  const onResize = (rect) => {
     if (webcamRef.current) {
       setWebcamHeight(webcamRef.current.video.offsetHeight);
-    }
+    };
   }
 
   useEffect(() => {
-    streamVideo();
-  }, [])
+    if (!init) {
+      streamVideo();
+      setInit(true)
+    }
+  }, [init, streamVideo])
 
   return (
     <>
@@ -92,51 +113,43 @@ export default function Login() {
                 height: webcamHeight,
               }}
             >
-              <div
+              <Box
                 style={{
                   flex: 1,
                   justifyContent: 'center',
                   position: 'relative',
                   height: webcamHeight,
+                  
                 }}
               >
-                <Webcam 
-                  style={{
-                    width: '100%',
-                    position: "absolute",
-                    borderRadius: "1%",
-                  }}
-                  ref={webcamRef}
-                  screenshotFormat="image/jpeg"
-                />
-                {faceLocations.map((data) => (
-                  drawReac(...data)
+                <Box sx={{
+                  position: "absolute",
+                  width: '100%',
+                }}>
+                  <ResizeObserver
+                    onReflow={onResize}
+                  />
+                  <Webcam 
+                    style={{
+                      width: '100%',
+                      borderRadius: "1%",
+                    }}
+                    ref={webcamRef}
+                    screenshotFormat="image/jpeg"
+                  />
+                {faceLocations.map((data, index) => (
+                  drawReac(...data, index)
                 ))}
-              </div>
+                </Box>
+              </Box>
             </Box>
-            
-            <Button
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={handleClick}
-            >
-              Sign In
-            </Button>
 
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-
+            <Typography variant="h5" sx={{textAlign: 'center', marginTop: 8}}>
+              {msg}
+            </Typography>
+            <Typography variant="body1" sx={{textAlign: 'center', marginTop: 1}}>
+              {msg2}
+            </Typography>
           </Box>
         </Box>
       </Container>
