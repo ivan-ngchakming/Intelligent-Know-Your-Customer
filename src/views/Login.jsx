@@ -12,12 +12,21 @@ export default function Login() {
   const [init, setInit] = useState(false);
   const [webcamHeight, setWebcamHeight] = useState(0);
   const [faceLocations, setFaceLocations] = useState([]);
+  const [timer, setTimer] = useState(null);
   const [msg, setMsg] = useState('Detecting Face...');
   const [loggedIn, setLoggedIn] = useState(false)
   const webcamRef = React.useRef();
 
+  const login = () => {
+    clearTimeout(timer)
+    setMsg("Login Success!");
+    setLoggedIn(true);
+    setTimeout(() => {
+      history.push('/home');
+    }, 1000)
+  }
+
   const streamVideo = useCallback(() => {
-    var timer;
     let imageSrc;
 
     try {
@@ -36,18 +45,13 @@ export default function Login() {
           data.result.forEach(face => {
             console.log(face)
             if (face.confidence > CONFIDENCE) {
-              setMsg("Login Success!");
-              setLoggedIn(true)
-              clearTimeout(timer);
-              setTimeout(() => {
-                history.push('/home');
-              }, 1000)
+              login();
             }
           });
         } 
       })
     }
-    timer = setTimeout(streamVideo, 100);
+    setTimer(setTimeout(streamVideo, 100));
   }, [history])
 
   const drawReac = (top_x, top_y, width, height, index) => {
@@ -97,7 +101,7 @@ export default function Login() {
             width: '100%',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} onClick={login}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
