@@ -7,6 +7,7 @@ from sqlalchemy import (
     Float, 
     DateTime
 )
+from sqlalchemy.sql import func
 
 from .metadata import metadata_obj
 
@@ -16,7 +17,9 @@ user_table = Table(
     metadata_obj,
     Column('user_id', Integer, primary_key=True),
     Column('name', String(30), nullable=False),
-    Column('password', String(30), nullable=False)
+    Column('password', String(30), nullable=False),
+    Column('joined_date', DateTime, nullable=False, server_default=func.now()),
+
 )
 
 login_history_table = Table(
