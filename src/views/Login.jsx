@@ -13,7 +13,7 @@ export default function Login() {
   const [webcamHeight, setWebcamHeight] = useState(0);
   const [faceLocations, setFaceLocations] = useState([]);
   const [msg, setMsg] = useState('Detecting Face...');
-  const [msg2, setMsg2] = useState('')
+  const [loggedIn, setLoggedIn] = useState(false)
   const webcamRef = React.useRef();
 
   const streamVideo = useCallback(() => {
@@ -37,7 +37,7 @@ export default function Login() {
             console.log(face)
             if (face.confidence > CONFIDENCE) {
               setMsg("Login Success!");
-              setMsg2("Taking you to Home page...")
+              setLoggedIn(true)
               clearTimeout(timer);
               setTimeout(() => {
                 history.push('/home');
@@ -133,6 +133,7 @@ export default function Login() {
                     style={{
                       width: '100%',
                       borderRadius: "1%",
+                      border: loggedIn ? `10px solid #f07260` : null,
                     }}
                     ref={webcamRef}
                     screenshotFormat="image/jpeg"
@@ -147,9 +148,11 @@ export default function Login() {
             <Typography variant="h5" sx={{textAlign: 'center', marginTop: 8}}>
               {msg}
             </Typography>
-            <Typography variant="body1" sx={{textAlign: 'center', marginTop: 1}}>
-              {msg2}
-            </Typography>
+            {loggedIn && (
+              <Typography variant="body1" sx={{textAlign: 'center', marginTop: 1}}>
+                Taking you to Home page...
+              </Typography>
+            )}
           </Box>
         </Box>
       </Container>
