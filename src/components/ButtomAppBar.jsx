@@ -5,9 +5,11 @@ import HomeIcon from '@mui/icons-material/Home';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import LogoutIcon from '@mui/icons-material/Logout';
+import HistoryIcon from '@mui/icons-material/History';
 
 const routes = [
   '/home',
+  '/login-history',
   '/',
 ]
 
@@ -34,6 +36,7 @@ export default function BottomAppBar({children, onChange}) {
           onChange={handleChange}
         >
           <BottomNavigationAction label="Home" icon={<HomeIcon />} />
+          <BottomNavigationAction label="Login History" icon={<HistoryIcon />} />
           <BottomNavigationAction label="Logout" icon={<LogoutIcon />} />
         </BottomNavigation>
       </AppBar>
