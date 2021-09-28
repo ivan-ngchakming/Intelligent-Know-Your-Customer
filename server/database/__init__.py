@@ -18,3 +18,6 @@ engine = create_engine(f"mysql+mysqlconnector://{username}:{password}@{host}:{po
 
 def create_all():
     metadata_obj.create_all(engine)
+
+def drop_all():
+    metadata_obj.drop_all(engine)

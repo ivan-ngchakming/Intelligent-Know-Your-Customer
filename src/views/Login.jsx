@@ -17,14 +17,15 @@ export default function Login() {
   const [loggedIn, setLoggedIn] = useState(false)
   const webcamRef = React.useRef();
 
-  const login = () => {
+  const login = useCallback((userId) => {
     clearTimeout(timer)
     setMsg("Login Success!");
     setLoggedIn(true);
+    localStorage.setItem('userId', userId);
     setTimeout(() => {
       history.push('/home');
     }, 1000)
-  }
+  }, [history, timer])
 
   const streamVideo = useCallback(() => {
     let imageSrc;
@@ -45,14 +46,14 @@ export default function Login() {
           data.result.forEach(face => {
             console.log(face)
             if (face.confidence > CONFIDENCE) {
-              login();
+              login(1);  // TODO: use user id from response from server
             }
           });
         } 
       })
     }
     setTimer(setTimeout(streamVideo, 100));
-  }, [history])
+  }, [login])
 
   const drawReac = (top_x, top_y, width, height, index) => {
     const _width = width;
@@ -101,7 +102,7 @@ export default function Login() {
             width: '100%',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} onClick={login}>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} onClick={() => {login(1)}}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
