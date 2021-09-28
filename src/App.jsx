@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import BottomAppBar from './components/ButtomAppBar';
 import Login from './views/Login';
 import Home from './views/Home';
+import LoginHistory from './views/LoginHistory';
 
 const theme = createTheme({
   palette: {
@@ -22,9 +23,12 @@ function App() {
         <Router>
           <Switch>
             <Route path="/" exact component={Login} />
-            <BottomAppBar>  
+            
+            <BottomAppBar>
               <Route path="/home" exact component={Home} />
+              <Route path="/login-history" exact component={LoginHistory} />
             </BottomAppBar>
+            
           </Switch>
         </Router>
       </ThemeProvider>
