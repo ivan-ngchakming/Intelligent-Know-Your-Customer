@@ -21,6 +21,10 @@ export default function BottomAppBar({children, onChange}) {
     setValue(newValue);
     const toUrl = routes[newValue];
     if (toUrl) {
+      if (toUrl === '/') {
+        // Logout
+        localStorage.removeItem('userId');
+      }
       console.log("Redirecting to " + toUrl)
       history.push(toUrl)
     }

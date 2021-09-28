@@ -6,28 +6,24 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import React from 'react';
-
-function createData(loginDate, logoutDate, confidence) {
-  return { loginDate, logoutDate, confidence };
-}
-
-const rows = [
-  createData('2021-09-30', '2021-09-30', 60),
-  createData('2021-09-30', '2021-09-30', 60),
-  createData('2021-09-30', '2021-09-30', 60),
-  createData('2021-09-30', '2021-09-30', 60),
-  createData('2021-09-30', '2021-09-30', 60),
-  createData('2021-09-30', '2021-09-30', 60),
-  createData('2021-09-30', '2021-09-30', 60),
-  createData('2021-09-30', '2021-09-30', 60),
-  createData('2021-09-30', '2021-09-30', 60),
-  createData('2021-09-30', '2021-09-30', 60),
-  createData('2021-09-30', '2021-09-30', 60),
-  createData('2021-09-30', '2021-09-30', 60),
-];
+import React, { useState, useEffect } from 'react';
 
 export default function LoginHistory() {
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    window.server.auth.login_history(
+      JSON.stringify({
+        user_id: userId,
+      })
+    ).then(res => {
+      res = JSON.parse(res)
+      setRows(res);
+    })
+
+  }, [])
+
   return (
     <>
       <Container size='md' sx={{ mt: 8 }}>
@@ -45,8 +41,8 @@ export default function LoginHistory() {
                 <TableRow
                   key={row.name}
                 >
-                  <TableCell>{row.loginDate}</TableCell>
-                  <TableCell>{row.logoutDate}</TableCell>
+                  <TableCell>{row.login_date}</TableCell>
+                  <TableCell>{row.logout_date}</TableCell>
                   <TableCell>{row.confidence}</TableCell>
                 </TableRow>
               ))}
