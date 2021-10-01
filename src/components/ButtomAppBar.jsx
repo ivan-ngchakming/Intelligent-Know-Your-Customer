@@ -6,11 +6,13 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HistoryIcon from '@mui/icons-material/History';
+import PaymentsIcon from '@mui/icons-material/Payments';
 
 const routes = [
-  '/home',
-  '/login-history',
-  '/',
+  {path: '/home', label: 'Home', icon: HomeIcon},
+  {path: '/transactions', label: 'New Transaction', icon: PaymentsIcon},
+  {path: '/login-history', label: 'Login History', icon: HistoryIcon},
+  {path: '/', label: 'Logout', icon: LogoutIcon},
 ]
 
 export default function BottomAppBar({children, onChange}) {
@@ -19,14 +21,14 @@ export default function BottomAppBar({children, onChange}) {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    const toUrl = routes[newValue];
-    if (toUrl) {
-      if (toUrl === '/') {
+    const path = routes[newValue].path;
+    if (path) {
+      if (path === '/') {
         // Logout
         localStorage.removeItem('userId');
       }
-      console.log("Redirecting to " + toUrl)
-      history.push(toUrl)
+      console.log("Redirecting to " + path)
+      history.push(path)
     }
   }
 
@@ -39,9 +41,9 @@ export default function BottomAppBar({children, onChange}) {
           value={value}
           onChange={handleChange}
         >
-          <BottomNavigationAction label="Home" icon={<HomeIcon />} />
-          <BottomNavigationAction label="Login History" icon={<HistoryIcon />} />
-          <BottomNavigationAction label="Logout" icon={<LogoutIcon />} />
+          {routes.map(route => (
+            <BottomNavigationAction key={`app-bar-${route.path}-action`} label={route.label} icon={<route.icon />} />
+          ))}
         </BottomNavigation>
       </AppBar>
     </>

@@ -6,6 +6,7 @@ import BottomAppBar from './components/ButtomAppBar';
 import Login from './views/Login';
 import Home from './views/Home';
 import LoginHistory from './views/LoginHistory';
+import Transactions from './views/Transactions';
 
 const theme = createTheme({
   palette: {
@@ -27,6 +28,7 @@ function App() {
             <BottomAppBar>
               <Route path="/home" exact component={Home} />
               <Route path="/login-history" exact component={LoginHistory} />
+              <Route path="/transactions" exact component={Transactions} />
             </BottomAppBar>
             
           </Switch>
