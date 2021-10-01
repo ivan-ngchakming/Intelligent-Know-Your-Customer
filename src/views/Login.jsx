@@ -19,9 +19,13 @@ export default function Login() {
 
   const login = useCallback((userId) => {
     clearTimeout(timer)
+
     setMsg("Login Success!");
     setLoggedIn(true);
     localStorage.setItem('userId', userId);
+
+    console.log("Successfully logged-in")
+
     setTimeout(() => {
       history.push('/home');
     }, 1000)
@@ -40,11 +44,9 @@ export default function Login() {
       const imageBase64 = imageSrc.split(',')[1]
       window.server.auth.login(imageBase64).then(res => {
         const data = JSON.parse(res)
-        console.log(data)
         if (data.result) {
           setFaceLocations(data.result.map(face => face.location));
           data.result.forEach(face => {
-            console.log(face)
             if (face.confidence > CONFIDENCE) {
               login(1);  // TODO: use user id from response from server
             }
