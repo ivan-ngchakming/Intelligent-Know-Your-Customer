@@ -33,8 +33,7 @@ function App() {
               <Route path="/home" exact component={Home} />
               <Route path="/login-history" exact component={LoginHistory} />
               <Route path="/transactions" exact component={Transactions} />
-              <Route path="/savings-acct" exact render={() => <AccountDetail AccountType={"Savings"} />} />
-              <Route path="/current-acct" exact render={() => <AccountDetail AccountType={"Current"} />} />
+              <Route path="/account" exact render={(props) => <AccountDetail {...props}/>} />
             </BottomAppBar>
           </Switch>
         </Router>

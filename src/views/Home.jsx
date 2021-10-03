@@ -9,6 +9,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
+const accounts = [
+  {type: 'Current', account_number: '012-123-31-123333', balance: 10123.21, currency: 'HKD'},
+  {type: 'Savings', account_number: '012-123-31-123334', balance: 50123.21, currency: 'HKD'},
+]
+
 export default function Home() {
   // TODO: get actual account records from API
   return (
@@ -27,16 +32,18 @@ export default function Home() {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <TableCell><Link to="/current-acct">Current Account</Link></TableCell>
-                <TableCell>012-123-31-123333</TableCell>
-                <TableCell>HK $10,123.21</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><Link to="/savings-acct">Savings Account</Link></TableCell>
-                <TableCell>012-123-31-123334</TableCell>
-                <TableCell>HK $50,123.21</TableCell>
-              </TableRow>
+              {accounts.map(account => (
+                <TableRow>
+                  <TableCell>
+                    <Link to={{
+                      pathname: "/account",
+                      state: { accountNum: account.account_number, accountType: account.type },
+                    }}>{account.type} Account</Link>
+                  </TableCell>
+                  <TableCell>{account.account_number}</TableCell>
+                  <TableCell>HK ${account.balance}</TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
