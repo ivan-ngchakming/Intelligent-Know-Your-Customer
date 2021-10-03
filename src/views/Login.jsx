@@ -37,9 +37,10 @@ export default function Login() {
     try {
       imageSrc = webcamRef.current.getScreenshot();
     } catch (e) {
-      console.error(e)
+      console.error(e);
+      return;
     }
-      
+
     if (imageSrc) {
       const imageBase64 = imageSrc.split(',')[1]
       window.server.auth.login(imageBase64).then(res => {
@@ -51,7 +52,7 @@ export default function Login() {
               login(1);  // TODO: use user id from response from server
             }
           });
-        } 
+        }
       })
     }
     setTimer(setTimeout(streamVideo, 100));
@@ -110,11 +111,11 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          
+
           <Box sx={{ mt: 1 }}>
             <Box
               sx={{
-                marginTop: 2, 
+                marginTop: 2,
                 marginBottom: 2,
                 width: '50vw',
                 height: webcamHeight,
@@ -126,7 +127,7 @@ export default function Login() {
                   justifyContent: 'center',
                   position: 'relative',
                   height: webcamHeight,
-                  
+
                 }}
               >
                 <Box sx={{
@@ -136,7 +137,7 @@ export default function Login() {
                   <ResizeObserver
                     onReflow={onResize}
                   />
-                  <Webcam 
+                  <Webcam
                     style={{
                       width: '100%',
                       borderRadius: "1%",
