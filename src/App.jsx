@@ -24,7 +24,6 @@ function App() {
         <Router>
           <Switch>
             <Route path="/" exact component={Login} />
-            
             <BottomAppBar>
               <Route path="/home" exact component={Home} />
               <Route path="/login-history" exact component={LoginHistory} />

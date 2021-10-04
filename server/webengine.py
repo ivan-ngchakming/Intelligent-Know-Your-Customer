@@ -6,8 +6,10 @@ from PyQt5.QtWebChannel import QWebChannel
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 
 from server.api import Foo, Transactions, Auth
+from server.utils.logging import get_console_handler
 
 logger = logging.getLogger(__name__)
+logger.addHandler(get_console_handler())
 
 ENVIRONMENT = os.environ['ENVIRONMENT']
 

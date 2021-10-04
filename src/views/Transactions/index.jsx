@@ -3,11 +3,9 @@ import {
   Box, Container, Tab, Tabs
 } from '@mui/material';
 import TransactionForm from './TransactionForm';
-import ValidationDialog from './ValidationDialog';
+import ValidationDialog from '../../components/ValidationDialog';
 import TabPanel from '../../components/TabPanel';
 import { a11yProps } from './utils';
-
-
 
 export default function Transactions() {
   const [tab, setTab] = useState(0);
