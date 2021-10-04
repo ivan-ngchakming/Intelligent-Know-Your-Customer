@@ -1,42 +1,53 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { Typography, Container } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 
-const buttonStyle = {
-  marginLeft: '10px',
-};
+const accounts = [
+  {type: 'Current', account_number: '012-123-31-123333', balance: 10123.21, currency: 'HKD'},
+  {type: 'Savings', account_number: '012-123-31-123334', balance: 50123.21, currency: 'HKD'},
+]
 
 export default function Home() {
-
-  const handleClick = () => {
-    console.log("Clicked Foo 1");
-    const student = {name: 'Lucas', school: 'HKU'}
-    window.server.foo.foo(JSON.stringify(student)).then(res => {
-      console.log(res);
-    })
-  }
-
-  const handleClick2 = () => {
-    console.log("Clicked Foo 2");
-    window.server.foo.foo2(JSON.stringify({x: 'data'})).then(res => {
-      console.log(JSON.parse(res))
-    });
-  }
-  
+  // TODO: get actual account records from API
   return (
     <div>
-      <h1>Home</h1>
-      <br />
-      <Button href="/" variant="contained" sx={buttonStyle}>
-        Logout
-      </Button>
-
-      <Button onClick={handleClick} variant="contained" sx={buttonStyle}>
-        Foo
-      </Button>
-
-      <Button onClick={handleClick2} variant="contained" sx={buttonStyle}>
-        Foo 2
-      </Button>
+      <Typography variant="h4" sx={{textAlign: 'center', marginTop: 8}}>
+        Welcome Back, Doge
+      </Typography>
+      <Container size='md' sx={{ mt: 8 }}>
+        <TableContainer component={Paper}>
+          <Table aria-label="accounts-table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Account Type</TableCell>
+                <TableCell>Account Number</TableCell>
+                <TableCell>Balance</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {accounts.map(account => (
+                <TableRow>
+                  <TableCell>
+                    <Link to={{
+                      pathname: "/account",
+                      state: { accountNum: account.account_number, accountType: account.type },
+                    }}>{account.type} Account</Link>
+                  </TableCell>
+                  <TableCell>{account.account_number}</TableCell>
+                  <TableCell>HK ${account.balance}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
     </div>
   )
 }

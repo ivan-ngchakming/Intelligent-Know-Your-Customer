@@ -7,12 +7,17 @@ import Login from './views/Login';
 import Home from './views/Home';
 import LoginHistory from './views/LoginHistory';
 import Transactions from './views/Transactions';
+import AccountDetail from './views/AccountDetail';
 
 const theme = createTheme({
   palette: {
     primary: {
       main: '#f07260',
+      contrastText: 'white',
     },
+    secondary: {
+      main: '#9C89B8',
+    }
   },
 });
 
@@ -24,13 +29,12 @@ function App() {
         <Router>
           <Switch>
             <Route path="/" exact component={Login} />
-            
             <BottomAppBar>
               <Route path="/home" exact component={Home} />
               <Route path="/login-history" exact component={LoginHistory} />
               <Route path="/transactions" exact component={Transactions} />
+              <Route path="/account" exact render={(props) => <AccountDetail {...props}/>} />
             </BottomAppBar>
-            
           </Switch>
         </Router>
       </ThemeProvider>
