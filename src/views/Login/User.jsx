@@ -3,7 +3,7 @@ import { Avatar, Box, Button, TextField, Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import ValidationDialog from '../../components/ValidationDialog';
 
-export default function User({onLogin}) {
+export default function User({ onLogin }) {
   const [userName, setUserName] = useState('');
   const [validationMsg, setValidationMsg] = useState(null);
   const [open, setOpen] = useState('');
@@ -12,7 +12,6 @@ export default function User({onLogin}) {
     // get user id from username from api
     var error = false;
     var errorMsg = [];
-    const userId = 1
 
     if (userName === '') {
       errorMsg.push("Please enter username")
@@ -23,9 +22,18 @@ export default function User({onLogin}) {
       setValidationMsg(errorMsg)
       handleDialogOpen();
     } else {
-      onLogin(userId);
+      console.log("Getting user by name: " + userName);
+      window.server.user.get_user(userName).then(res => {
+        if (res === 'no results') {
+          errorMsg = ["Sorry, username not found"];
+          setValidationMsg(errorMsg)
+          handleDialogOpen();
+          return;
+        }
+        const user = JSON.parse(res)
+        onLogin(user);
+      })
     }
-    
   }
 
   const handleDialogOpen = () => {
@@ -36,6 +44,7 @@ export default function User({onLogin}) {
     setOpen(false);
   };
 
+  const handleUserNameChange = (event) => setUserName(event.target.value);
   return (
     <>
       <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -51,7 +60,7 @@ export default function User({onLogin}) {
           label="User Name" 
           variant="outlined" 
           value={userName}
-          onChange={(event, newValue) => setUserName(newValue)}
+          onChange={handleUserNameChange}
         />
       </Box>
       

@@ -4,10 +4,10 @@ import FaceId from './FaceId';
 import User from './User';
 
 export default function Login() {
-  const [userId, setUserId] = useState(null); 
+  const [user, setUser] = useState(null); 
 
-  const handleLogin = (userId) => {
-    setUserId(userId)
+  const handleLogin = (user) => {
+    setUser(user);
   }
 
   return (
@@ -22,8 +22,8 @@ export default function Login() {
             width: '100%',
           }}
         >
-          {userId ? (
-            <FaceId userId={userId} />
+          {user ? (
+            <FaceId user={user} />
           ):(
             <User onLogin={handleLogin}/>
           )}

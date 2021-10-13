@@ -12,8 +12,8 @@ class Window(QMainWindow):
         self.setWindowTitle("IKYC")
 
         self.setCentralWidget(CentralWidget(self))
-        
-        self.showMaximized()
+        self.show()
+        # self.showMaximized()
 
 
 class CentralWidget(QStackedWidget):

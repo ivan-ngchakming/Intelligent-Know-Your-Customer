@@ -5,8 +5,9 @@ from PyQt5.Qt import QUrl
 from PyQt5.QtWebChannel import QWebChannel
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 
-from server.api import Foo, Transactions, Auth
+from server.api import Foo, Transactions, Auth, User
 from server.utils.logging import get_console_handler
+
 
 logger = logging.getLogger(__name__)
 logger.addHandler(get_console_handler())
@@ -33,6 +34,7 @@ class WebEngineView(QWebEngineView):
         logger.debug("Setting up channels")
         self.channel = QWebChannel()
         self.channel.registerObject('auth', Auth(self))
+        self.channel.registerObject('user', User(self))
         self.channel.registerObject('transactions', Transactions(self))
         self.channel.registerObject('foo', Foo(self))
         self.page().setWebChannel(self.channel)

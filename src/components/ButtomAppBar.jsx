@@ -25,7 +25,11 @@ export default function BottomAppBar({children, onChange}) {
     if (path) {
       if (path === '/') {
         // Logout
+        const userId = localStorage.getItem('userId');
         localStorage.removeItem('userId');
+        window.server.auth.logout(JSON.stringify({
+          user_id: userId,
+        }));
       }
       console.log("Redirecting to " + path)
       history.push(path)
