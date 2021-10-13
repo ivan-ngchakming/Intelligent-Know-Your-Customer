@@ -18,6 +18,7 @@ ENVIRONMENT = os.environ['ENVIRONMENT']
 
 logger = logging.getLogger(__name__)
 logger.addHandler(get_console_handler())
+logger.setLevel(logging.DEBUG)
 
 
 if __name__ == "__main__":

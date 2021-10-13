@@ -37,6 +37,7 @@
       new QWebChannel(qt.webChannelTransport, function (channel) {
           window.server = {
             auth: channel.objects.auth,
+            user: channel.objects.user,
             transactions: channel.objects.transactions,
             foo: channel.objects.foo,
           };

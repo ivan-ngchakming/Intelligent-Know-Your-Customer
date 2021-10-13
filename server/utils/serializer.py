@@ -4,6 +4,7 @@ import json
 
 
 from sqlalchemy.engine.cursor import CursorResult
+from sqlalchemy.engine.row import Row
 
 
 def alchemyencoder(obj):
@@ -21,13 +22,10 @@ def alchemyencoder(obj):
         return float(obj)
 
 
-def alchemyjsonify(res):
-    """Jsonify CursorResults from SQLAlchemy queries."""
-    return json.dumps([dict(r) for r in res], default=alchemyencoder)
-
-
 def jsonify(obj):
     if isinstance(obj, CursorResult):
-        return alchemyjsonify(obj)
+        return json.dumps([dict(r) for r in obj], default=alchemyencoder)
+    elif isinstance(obj, Row):
+        return json.dumps(dict(obj), default=alchemyencoder)
     else:
         return json.dumps(obj)
