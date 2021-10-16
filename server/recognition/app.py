@@ -2,18 +2,25 @@ import cv2
 import pickle
 import os
 
+from server.queries import models, users
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Recognition:
-	def __init__(self):
+	def __init__(self, user_name):
+		self.user_name = user_name
 		# Load recognize and read label from model
 		self.recognizer = cv2.face.LBPHFaceRecognizer_create()
-		self.recognizer.read(f"{BASE_DIR}/models/train.yml")
+
+
+		user_id = users.get(name=user_name)['user_id']
+		self.model_path = models.get(user_id=user_id)['path']
+		print(self.model_path)
+		self.recognizer.read(f"{self.model_path}/train.yml")
 
 		self.face_cascade = cv2.CascadeClassifier(f'{BASE_DIR}/haarcascade/haarcascade_frontalface_default.xml')
 
-		with open(f"{BASE_DIR}/models/labels.pickle", "rb") as f:
+		with open(f"{self.model_path}/labels.pickle", "rb") as f:
 			self.labels = {v: k for k, v in pickle.load(f).items()}
 	
 	def detect_recognize(self, img):

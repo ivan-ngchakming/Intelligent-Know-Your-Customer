@@ -2,17 +2,15 @@ import base64
 import io
 import json
 import logging
-import pickle
-import datetime
 
 import cv2
 from imageio import imread
 from PyQt5.QtCore import QObject, pyqtSlot
-from server.database import engine
-from server.database.tables import login_history_table
-from server.recognition.app import Recognition
-from server.utils.serializer import jsonify
-from sqlalchemy import select, insert, update
+
+from ..queries import login_history, users
+from ..recognition.app import Recognition
+from ..utils.serializer import jsonify
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -20,16 +18,21 @@ logger.setLevel(logging.DEBUG)
 class Auth(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.recognition = Recognition()
-        labels = {"person_name": 1}
-        with open(f"server/recognition/models/labels.pickle", "rb") as f:
-            labels = pickle.load(f)
-            labels = {v: k for k, v in labels.items()}
-            logger.info("Labels for Face ID loaded")
-            logger.debug(labels)
+        self.recognition = None
+
+    def load_model(self, user_id):
+        user_name = users.get(user_id=user_id)['name']
+        if self.recognition is not None:
+            if self.recognition.user_name == user_name:
+                return
+        
+        self.recognition = Recognition(user_name)
+
 
     @pyqtSlot(str, int, result=str)
     def login(self, img_base64, user_id):
+        self.load_model(user_id)
+
         # reconstruct image as an numpy array
         img = imread(io.BytesIO(base64.b64decode(img_base64)))
 
@@ -41,14 +44,12 @@ class Auth(QObject):
     @pyqtSlot(str, result=str)
     def log_login(self, req):
         params = json.loads(req)
-        print('query variables', params)
+        logger.debug('query variables', params)
 
-        with engine.connect() as conn:
-            result = conn.execute(insert(login_history_table),
-            [
-                {'user_id': params['user_id'], 'confidence': params['confidence']},
-            ])
-            conn.commit()
+        if login_history.get_current_count() >= 1:
+            return 'already logged in'
+
+        login_history.create(params['user_id'], params['confidence'])
 
         return 'success'
         
@@ -58,27 +59,13 @@ class Auth(QObject):
         params = json.loads(req)
         print('query variables', params)
 
-        with engine.connect() as conn:
-            result = conn.execute(
-                select(login_history_table)
-                .where(login_history_table.c.user_id==params['user_id'])
-                .order_by(login_history_table.c.login_date.desc())
-                .limit(5)
-            )
+        result = login_history.list_all(params['user_id'])
 
-            return jsonify(result)
+        return jsonify(result)
 
     @pyqtSlot(str, result=str)
     def logout(self, req):
-        with engine.connect() as conn:
-            params = json.loads(req)
-            result = conn.execute(
-                update(login_history_table)
-                .where(
-                    login_history_table.c.user_id == params['user_id'], 
-                    login_history_table.c.logout_date == None
-                ),
-                [{'logout_date': datetime.datetime.now()}]
-            )
-            conn.commit()
-            return 'success'
+        logger.debug("Logging out")
+        params = json.loads(req)
+        login_history.update_logout_date(params['user_id'])
+        return 'success'

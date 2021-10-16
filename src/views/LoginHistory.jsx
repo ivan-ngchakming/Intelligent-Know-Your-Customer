@@ -8,6 +8,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import React, { useState, useEffect } from 'react';
 
+const formatDatetime = (dateTime) => {
+  if (dateTime)
+    return dateTime.split('T').join(' ')
+  return ''
+}
+
 export default function LoginHistory() {
   const [rows, setRows] = useState([]);
 
@@ -41,8 +47,8 @@ export default function LoginHistory() {
                 <TableRow
                   key={row.name}
                 >
-                  <TableCell>{row.login_date}</TableCell>
-                  <TableCell>{row.logout_date}</TableCell>
+                  <TableCell>{formatDatetime(row.login_date)}</TableCell>
+                  <TableCell>{formatDatetime(row.logout_date)}</TableCell>
                   <TableCell>{row.confidence}</TableCell>
                 </TableRow>
               ))}

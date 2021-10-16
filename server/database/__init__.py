@@ -14,7 +14,7 @@ password = os.environ['DATABASE_PASSWORD']
 database = os.environ['DATABASE_NAME']
 
 # Create an SQLAlchemy engine that connects to MySQL database
-engine = create_engine(f"mysql+mysqlconnector://{username}:{password}@{host}:{port}/{database}", echo=True, future=True)
+engine = create_engine(f"mysql+mysqlconnector://{username}:{password}@{host}:{port}/{database}", echo=False, future=True)
 
 def create_all():
     metadata_obj.create_all(engine)
