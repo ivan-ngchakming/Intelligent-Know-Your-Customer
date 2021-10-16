@@ -28,4 +28,4 @@ def jsonify(obj):
     elif isinstance(obj, Row):
         return json.dumps(dict(obj), default=alchemyencoder)
     else:
-        return json.dumps(obj)
+        return json.dumps(obj, default=alchemyencoder)

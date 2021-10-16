@@ -18,16 +18,15 @@ export default function FaceId({ user }) {
   const [loggedIn, setLoggedIn] = useState(false)
   const webcamRef = React.useRef();
 
-  const login = useCallback((confidence) => {
+  const login = useCallback((user_id, confidence) => {
     clearTimeout(timer);
 
     setMsg("Login Success!");
-    setLoggedIn(true);
-    localStorage.setItem('userId', user.user_id);
+    localStorage.setItem('userId', user_id);
 
     // Log login record to login history table
     window.server.auth.log_login(JSON.stringify({
-      user_id: user.user_id, 
+      user_id: user_id, 
       confidence: confidence
     }));
 
@@ -36,7 +35,7 @@ export default function FaceId({ user }) {
     setTimeout(() => {
       history.push('/home');
     }, 1000)
-  }, [history, timer, user])
+  }, [history, timer])
 
   const streamVideo = useCallback(() => {
     let imageSrc;
@@ -55,15 +54,18 @@ export default function FaceId({ user }) {
         if (data.result) {
           setFaceLocations(data.result.map(face => face.location));
           data.result.forEach(face => {
-            if (face.confidence > CONFIDENCE) {
+            if (face.confidence > CONFIDENCE && !loggedIn) {
+              setLoggedIn(true)
+              clearTimeout(timer);
               login(user.user_id, face.confidence);
+              return;
             }
           });
         } 
       })
     }
     setTimer(setTimeout(streamVideo, 100));
-  }, [login, user])
+  }, [login, user, timer, loggedIn])
 
   const onResize = (rect) => {
     if (webcamRef.current) {
