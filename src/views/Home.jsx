@@ -10,8 +10,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 const accounts = [
-  {type: 'Current', account_number: '012-123-31-123333', balance: 10123.21, currency: 'HKD'},
-  {type: 'Savings', account_number: '012-123-31-123334', balance: 50123.21, currency: 'HKD'},
+  {type: 'Current', account_number: '1234', balance: 10123.21, currency: 'HKD'},
+  {type: 'Savings', account_number: '5678', balance: 50123.21, currency: 'HKD'},
 ]
 
 export default function Home() {
