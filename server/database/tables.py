@@ -33,6 +33,16 @@ account_table = sa.Table(
     sa.Column('currency', sa.String(10), nullable=False)
 )
 
+transaction_table = sa.Table(
+    'transaction',
+    metadata_obj, 
+    sa.Column('transaction_id', sa.Integer, primary_key=True),
+    sa.Column('transaction_date', sa.DateTime, nullable=False, server_default=func.now()),
+    sa.Column('amount', sa.Float, nullable=False),
+    sa.Column('recipient', sa.ForeignKey('account.account_num'), nullable=False),
+    sa.Column('payer', sa.ForeignKey('account.account_num'), nullable=False),
+)
+
 model_table = sa.Table(
     'model',
     metadata_obj,
