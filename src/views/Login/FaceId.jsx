@@ -18,12 +18,12 @@ export default function FaceId({ user }) {
   const [loggedIn, setLoggedIn] = useState(false)
   const webcamRef = React.useRef();
 
-  const login = useCallback((user_id, confidence) => {
+  const login = useCallback((user_id, confidence, username) => {
     clearTimeout(timer);
 
     setMsg("Login Success!");
     localStorage.setItem('userId', user_id);
-    localStorage.setItem('userName', user.name);
+    localStorage.setItem('username', username);
 
     // Log login record to login history table
     window.server.auth.log_login(JSON.stringify({
@@ -58,7 +58,7 @@ export default function FaceId({ user }) {
             if (face.confidence > CONFIDENCE && !loggedIn) {
               setLoggedIn(true)
               clearTimeout(timer);
-              login(user.user_id, face.confidence);
+              login(user.user_id, face.confidence, user.name);
               return;
             }
           });

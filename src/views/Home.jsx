@@ -13,16 +13,15 @@ const accounts = [
   {type: 'Current', account_num: '1', balance: 10123.21, currency: 'HKD'},
   {type: 'Savings', account_num: '2', balance: 50123.21, currency: 'HKD'},
 ]
+// TODO: get actual account records from API
+
 
 export default function Home() {
-  // TODO: get actual account records from API
-
-  const userName = localStorage.getItem('userName');
-
+  const username = localStorage.getItem('username');
   return (
     <div>
       <Typography variant="h4" sx={{textAlign: 'center', marginTop: 8}}>
-        Welcome Back, {userName}
+        Welcome Back, {username}
       </Typography>
       <Container size='md' sx={{ mt: 8 }}>
         <TableContainer component={Paper}>
