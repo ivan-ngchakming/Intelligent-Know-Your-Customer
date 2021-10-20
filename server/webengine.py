@@ -15,11 +15,19 @@ logger.addHandler(get_console_handler())
 ENVIRONMENT = os.environ['ENVIRONMENT']
 
 
+class WebEnginePage(QWebEnginePage):
+    def javaScriptConsoleMessage(self, level, msg, line, sourceID):
+        pass
+
+
 class WebEngineView(QWebEngineView):
     def __init__(self, parent=None):
         super().__init__()
         self.parent = parent
 
+        # setup page
+        self.setPage(WebEnginePage(self))
+        
         logger.debug(f"Loading react app in {ENVIRONMENT} mode")
         if ENVIRONMENT == 'production':
             self.load(QUrl("http://localhost:8000"))
@@ -50,6 +58,9 @@ class WebEngineView(QWebEngineView):
     def onLoad(self):
         logger.debug(f"PyQt WebEngineView finished loaded")
         self.parent.setCurrentWidget(self)
+
+    def javaScriptConsoleMessage(self, level, msg, line, sourceID):
+        pass
 
 
 class Loader(QWebEngineView):
