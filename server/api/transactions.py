@@ -19,5 +19,7 @@ class Transactions(QObject):
         max_amount = params.get('max_amount')
         start_date = params.get('start_date')
         end_date = params.get('end_date')
+
         result = transactions.get(account_num, min_amount, max_amount, start_date, end_date)
+        
         return jsonify(result)

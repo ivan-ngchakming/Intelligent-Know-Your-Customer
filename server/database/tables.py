@@ -35,12 +35,15 @@ account_table = sa.Table(
 
 transaction_table = sa.Table(
     'transaction',
-    metadata_obj, 
-    sa.Column('transaction_id', sa.Integer, primary_key=True),
-    sa.Column('transaction_date', sa.DateTime, nullable=False, server_default=func.now()),
+    metadata_obj,
+    sa.Column('id', sa.Integer, primary_key=True),
+    sa.Column('from_account_num', sa.ForeignKey('account.account_num'), nullable=False),
+    sa.Column('to_account_num', sa.ForeignKey('account.account_num'), nullable=False),
+    sa.Column('date', sa.DateTime, server_default=func.now()),
+    sa.Column('description', sa.String(300)),
     sa.Column('amount', sa.Float, nullable=False),
-    sa.Column('recipient', sa.ForeignKey('account.account_num'), nullable=False),
-    sa.Column('payer', sa.ForeignKey('account.account_num'), nullable=False),
+    sa.Column('balance', sa.Float, nullable=False),
+    # extend_existing=True
 )
 
 model_table = sa.Table(
@@ -61,13 +64,3 @@ image_table = sa.Table(
     sa.Column('model', sa.ForeignKey('model.model_id'), nullable=False)
 )
 
-transaction_table = sa.Table(
-    'transaction',
-    metadata_obj,
-    sa.Column('id', sa.Integer, primary_key=True),
-    sa.Column('account_num', sa.ForeignKey('account.account_num'), nullable=False),
-    sa.Column('date', sa.DateTime, server_default=func.now()),
-    sa.Column('description', sa.String(300)),
-    sa.Column('amount', sa.Float, nullable=False),
-    sa.Column('balance', sa.Float, nullable=False),
-)

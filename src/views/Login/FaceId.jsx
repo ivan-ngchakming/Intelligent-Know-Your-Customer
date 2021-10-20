@@ -135,7 +135,7 @@ export default function FaceId({ user }) {
           {msg}
         </Typography>
         <Typography variant="body1" sx={{textAlign: 'center', marginTop: 1}}>
-          {loggedIn ? "Taking you to Home page..." : `Hello ${user.name}, please confirm your face identity`}
+          {loggedIn ? "Taking you to Home page..." : `Hello ${user.name.replace(/^\w/, (c) => c.toUpperCase())}, please confirm your face identity`}
         </Typography>
       </Box>
     </>

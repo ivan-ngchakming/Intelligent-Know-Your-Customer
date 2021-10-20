@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <div>
       <Typography variant="h4" sx={{textAlign: 'center', marginTop: 8}}>
-        Welcome Back, {username}
+        Welcome Back, {username.replace(/^\w/, (c) => c.toUpperCase())}
       </Typography>
       <Container size='md' sx={{ mt: 8 }}>
         <TableContainer component={Paper}>
