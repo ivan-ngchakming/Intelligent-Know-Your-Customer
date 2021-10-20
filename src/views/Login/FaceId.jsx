@@ -83,7 +83,7 @@ export default function FaceId({ user }) {
 
   return (
     <>
-      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} onClick={() => {login(60)}}>
+      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} onClick={() => {login(1, 60, 'Peter')}}>
         <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
