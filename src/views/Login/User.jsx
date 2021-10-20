@@ -6,7 +6,7 @@ import ValidationDialog from '../../components/ValidationDialog';
 export default function User({ onLogin }) {
   const [userName, setUserName] = useState('');
   const [validationMsg, setValidationMsg] = useState(null);
-  const [open, setOpen] = useState('');
+  const [open, setOpen] = useState(false);
 
   const handleLogin = () => {
     // get user id from username from api
@@ -55,15 +55,15 @@ export default function User({ onLogin }) {
       </Typography>
 
       <Box sx={{ mt: 4 }}>
-        <TextField 
-          id="user-name" 
-          label="User Name" 
-          variant="outlined" 
+        <TextField
+          id="user-name"
+          label="User Name"
+          variant="outlined"
           value={userName}
           onChange={handleUserNameChange}
         />
       </Box>
-      
+
       <Box sx={{ mt: 4 }}>
         <Button variant="contained" onClick={handleLogin}>
           Login
