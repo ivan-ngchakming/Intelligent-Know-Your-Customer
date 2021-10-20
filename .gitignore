@@ -4,6 +4,8 @@ sample_code/model
 .env
 venv
 
+./**/.DS_Store
+
 /node_modules
 build
 **/__pycache__
