@@ -59,4 +59,5 @@ transaction_table = sa.Table(
     sa.Column('date', sa.DateTime, server_default=func.now()),
     sa.Column('description', sa.String(300)),
     sa.Column('amount', sa.Float, nullable=False),
+    sa.Column('balance', sa.Float, nullable=False),
 )

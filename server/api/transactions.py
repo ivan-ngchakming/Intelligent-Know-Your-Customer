@@ -2,22 +2,7 @@ import json
 
 from PyQt5.QtCore import QObject, pyqtSlot
 from ..utils.serializer import jsonify
-
-# replace with data from database
-dummyRows = [
-  { 'id':1,  'date': '2021-03-02', 'time': '10:21AM', 'description': 'dummyRows', 'amount':100, 'balance': 200},
-  { 'id':2,  'date': '2017-03-02', 'time': '9:21PM', 'description': 'dummyRows', 'amount':-200, 'balance': 200},
-  { 'id':3,  'date': '2021-02-02', 'time': '10:21AM', 'description': 'dummyRows', 'amount':10, 'balance': 200},
-]
-
-dummyRows1 = [
-  { 'id':1,  'date': '2021-03-02', 'time': '10:21AM', 'description': 'dummyRows1', 'amount':'100', 'balance': 200},
-  { 'id':2,  'date': '2017-03-02', 'time': '9:21PM', 'description': 'dummyRows1', 'amount':'-200', 'balance': 200},
-  { 'id':3,  'date': '2021-02-02', 'time': '10:21AM', 'description': 'dummyRows1', 'amount':'10', 'balance': 200},
-  { 'id':4,  'date': '2021-09-02', 'time': '10:21AM', 'description': 'dummyRows1', 'amount':'2000', 'balance': 200},
-  { 'id':5,  'date': '2019-03-31', 'time': '10:21AM', 'description': 'dummyRows1', 'amount':100, 'balance': 200},
-  { 'id':6,  'date': '2021-03-02', 'time': '10:21AM', 'description': 'dummyRows1', 'amount':100, 'balance': 200},
-]
+from ..queries import transactions
 
 class Transactions(QObject):
     def __init__(self, parent=None):
@@ -28,8 +13,11 @@ class Transactions(QObject):
         params = json.loads(req)
         print('query variables', params)
 
-        if ('minAmount' in params and params['minAmount'] == 1):
-            result = dummyRows1
-        else:
-            result = dummyRows
+        #result = transactions.get(params['account_num'])
+        account_num = params.get('account_num')
+        min_amount = params.get('min_amount')
+        max_amount = params.get('max_amount')
+        start_date = params.get('start_date')
+        end_date = params.get('end_date')
+        result = transactions.get(account_num, min_amount, max_amount, start_date, end_date)
         return jsonify(result)

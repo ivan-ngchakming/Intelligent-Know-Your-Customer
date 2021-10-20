@@ -23,10 +23,11 @@ export default function FaceId({ user }) {
 
     setMsg("Login Success!");
     localStorage.setItem('userId', user_id);
+    localStorage.setItem('userName', user.name);
 
     // Log login record to login history table
     window.server.auth.log_login(JSON.stringify({
-      user_id: user_id, 
+      user_id: user_id,
       confidence: confidence
     }));
 
@@ -46,7 +47,7 @@ export default function FaceId({ user }) {
       console.error(e);
       return;
     }
-      
+
     if (imageSrc) {
       const imageBase64 = imageSrc.split(',')[1]
       window.server.auth.login(imageBase64, user.user_id).then(res => {
@@ -61,7 +62,7 @@ export default function FaceId({ user }) {
               return;
             }
           });
-        } 
+        }
       })
     }
     setTimer(setTimeout(streamVideo, 100));
@@ -88,11 +89,11 @@ export default function FaceId({ user }) {
       <Typography component="h1" variant="h5">
         Sign in
       </Typography>
-      
+
       <Box sx={{ mt: 1 }}>
         <Box
           sx={{
-            marginTop: 2, 
+            marginTop: 2,
             marginBottom: 2,
             width: '50vw',
             height: webcamHeight,
@@ -104,7 +105,7 @@ export default function FaceId({ user }) {
               justifyContent: 'center',
               position: 'relative',
               height: webcamHeight,
-              
+
             }}
           >
             <Box sx={{
@@ -114,7 +115,7 @@ export default function FaceId({ user }) {
               <ResizeObserver
                 onReflow={onResize}
               />
-              <Webcam 
+              <Webcam
                 style={{
                   width: '100%',
                   borderRadius: "1%",

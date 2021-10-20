@@ -7,9 +7,6 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 
-// TODO: separate the date and time
-// TODO: database queries
-
 export default function AccountFilterForm({updateRows}) {
   const [validationMsg, setValidationMsg] = useState(null);
   const [open, setOpen] = useState(false);
@@ -47,48 +44,55 @@ export default function AccountFilterForm({updateRows}) {
     var inputs = {}
 
     if (startDate) {
-      const dateVal = new Date(startDate)
-      if (isValidDate(dateVal))
-        inputs.startDate = dateVal
-      else
+      const dateObj = new Date(startDate)
+      if (isValidDate(dateObj)) {
+        const dateString = dateObj.toLocaleString("sv-SE")
+        inputs.start_date = dateString.slice(0, -2) + "00"
+        console.log(inputs)
+      } else {
         errorMsg.push('Enter a valid Start Date & Time')
+      }
     } else {
-      inputs.startDate = null
+      inputs.start_date = null
     }
 
     if (endDate) {
-      const dateVal = new Date(endDate)
-      if (isValidDate(dateVal))
-        inputs.endDate = dateVal
-      else
+      const dateObj = new Date(endDate)
+      if (isValidDate(dateObj)) {
+        const dateString = dateObj.toLocaleString("sv-SE")
+        inputs.end_date = dateString.slice(0, -2) + "59"
+        console.log(inputs)
+      } else {
         errorMsg.push('Enter a valid End Date & Time')
+      }
     } else {
-      inputs.endDate = null
+      inputs.end_date = null
     }
+
     if (minAmount) {
       if (isNaN(minAmount))
         errorMsg.push('Enter a valid Minimum Amount')
       else
-        inputs.minAmount = Number(minAmount)
+        inputs.min_amount = Number(minAmount)
     } else {
-      inputs.minAmount = null
+      inputs.min_amount = null
     }
 
     if (maxAmount) {
       if (isNaN(maxAmount))
         errorMsg.push('Enter a valid Maximum Amount')
       else
-        inputs.maxAmount = Number(maxAmount)
+        inputs.max_amount = Number(maxAmount)
     } else {
-      inputs.maxAmount = null
+      inputs.max_amount = null
     }
 
-    if (inputs.startDate && inputs.endDate) {
-      if (inputs.startDate > inputs.endDate)
+    if (inputs.start_date && inputs.end_date) {
+      if (inputs.start_date > inputs.end_date)
         errorMsg.push('Start Date cannot be after End Date')
     }
-    if (inputs.minAmount && inputs.maxAmount) {
-      if (inputs.minAmount > inputs.maxAmount)
+    if (inputs.min_amount && inputs.max_amount) {
+      if (inputs.min_amount > inputs.max_amount)
         errorMsg.push('Min Amount cannot be greater than Max Amount')
     }
     return [errorMsg, inputs]

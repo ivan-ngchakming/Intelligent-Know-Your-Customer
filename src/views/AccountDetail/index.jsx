@@ -38,21 +38,19 @@ const columns = [
   },
 ];
 
-//const poop = [{id:1, description:'pooooop'}, {id:2, description:'fml'}]
-
 export default function AccountDetail(props) {
   const { accountNum, accountType } = props.location.state;
   const [rows, setRows] = useState([])
 
   useEffect(() => {
-    setRows([]) // SEND HELP it only works if i add this or resize the window whhHyYY
+    setRows([]) // it only works if i add this or resize the window whhHyYY
     updateRows({})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // update transaction records
   const updateRows = (filters) => {
-    filters.accountNum = accountNum
+    filters.account_num = accountNum
     window.server.transactions.list_transactions(
       JSON.stringify(filters)
     ).then(res => {
