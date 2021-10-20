@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Typography, Container
 } from '@mui/material';
@@ -38,26 +38,37 @@ const columns = [
   },
 ];
 
-const rows = [ // TODO: get actual data from API
-  { id:1,  date: '2021-03-02', time: '10:21AM', description: 'somedescription', amount:'100', balance: 200},
-  { id:2,  date: '2017-03-02', time: '9:21PM', description: 'somedescription', amount:'-200', balance: 200},
-  { id:3,  date: '2021-02-02', time: '10:21AM', description: 'somedescription', amount:'10', balance: 200},
-  { id:4,  date: '2021-09-02', time: '10:21AM', description: 'somedescription', amount:'2000', balance: 200},
-  { id:5,  date: '2019-03-31', time: '10:21AM', description: 'somedescription', amount:100, balance: 200},
-  { id:6,  date: '2021-03-02', time: '10:21AM', description: 'somedescription', amount:100, balance: 200},
-];
-
 export default function AccountDetail(props) {
   const { accountNum, accountType } = props.location.state;
+  const [rows, setRows] = useState([])
+
+  useEffect(() => {
+    setRows([]) // it only works if i add this or resize the window whhHyYY
+    updateRows({})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // update transaction records
+  const updateRows = (filters) => {
+    filters.account_num = accountNum
+    window.server.transactions.list_transactions(
+      JSON.stringify(filters)
+    ).then(res => {
+      const records = JSON.parse(res)
+      console.log('returned from api:', records)
+      setRows(records)
+    })
+  }
+
   return (
     <>
-      <Typography variant="h4" sx={{ textAlign: 'center', marginTop: 8 }}>
+      <Typography variant="h4" sx={{ textAlign: 'center', marginTop: 5 }}>
         {accountType} Account
       </Typography>
 
       <Container size='md' sx={{ mt:4 }}>
         <AccountOverview accountNum={accountNum} />
-        <AccountFilterForm />
+        <AccountFilterForm updateRows={updateRows}/>
 
         {/* transaction records */}
         <DataGrid

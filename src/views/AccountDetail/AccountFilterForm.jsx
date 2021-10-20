@@ -1,83 +1,98 @@
 import React, { useState } from 'react';
 import {
-  Grid, TextField, Button,
+  Grid, TextField, Button, Box
 } from '@mui/material';
 import ValidationDialog from '../../components/ValidationDialog';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 
-export default function AccountFilterForm() {
+export default function AccountFilterForm({updateRows}) {
   const [validationMsg, setValidationMsg] = useState(null);
-  const [open, setOpen] = useState('');
+  const [open, setOpen] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [minAmount, setMinAmount] = useState(null);
-  const [maxAmount, setMaxAmount] = useState(null);
+  const [minAmount, setMinAmount] = useState('');
+  const [maxAmount, setMaxAmount] = useState('');
+  const [showBtn, setShowBtn] = useState(false); // for showing clear filters button
 
-  // TODO: add clear filters button
-
-  const handleFilter = () => {
-    const [errorMsg, inputs] = checkInputs()
-    if (Object.keys(inputs).some(v=>v)) { // do nothing if no values entered
-      if (errorMsg.length !== 0) {
-        setValidationMsg(errorMsg)
-        setOpen(true)
-      } else {
-        console.log('TODO: send api request')
-      }
+  const handleFilterClick = () => {
+    const [errorMsg, inputs] = checkFilters()
+    if (errorMsg.length !== 0) {
+      setValidationMsg(errorMsg)
+      setOpen(true)
+      return
+    }
+    if (Object.values(inputs).some(v => v!==null)) { // do nothing if no values entered
+      updateRows(inputs)
+      setShowBtn(true)
     }
   }
 
-  // checks if inputs are valid
-  const checkInputs = () => {
+  const handleClearFilters = () => {
+    updateRows({})
+    setShowBtn(false)
+    setMinAmount('');
+    setMaxAmount('');
+    setStartDate(null);
+    setEndDate(null);
+  }
+
+  // checks if inputs for filters are valid
+  const checkFilters = () => {
     var errorMsg = []
     var inputs = {}
 
     if (startDate) {
-      const dateVal = new Date(startDate)
-      if (isValidDate(dateVal))
-        inputs.startDate = dateVal
-      else
+      const dateObj = new Date(startDate)
+      if (isValidDate(dateObj)) {
+        const dateString = dateObj.toLocaleString("sv-SE")
+        inputs.start_date = dateString.slice(0, -2) + "00"
+        console.log(inputs)
+      } else {
         errorMsg.push('Enter a valid Start Date & Time')
+      }
     } else {
-      inputs.startDate = null
+      inputs.start_date = null
     }
 
     if (endDate) {
-      const dateVal = new Date(endDate)
-      if (isValidDate(dateVal))
-        inputs.endDate = dateVal
-      else
+      const dateObj = new Date(endDate)
+      if (isValidDate(dateObj)) {
+        const dateString = dateObj.toLocaleString("sv-SE")
+        inputs.end_date = dateString.slice(0, -2) + "59"
+        console.log(inputs)
+      } else {
         errorMsg.push('Enter a valid End Date & Time')
+      }
     } else {
-      inputs.endDate = null
+      inputs.end_date = null
     }
 
     if (minAmount) {
       if (isNaN(minAmount))
         errorMsg.push('Enter a valid Minimum Amount')
       else
-        inputs.minAmount = Number(minAmount)
+        inputs.min_amount = Number(minAmount)
     } else {
-      inputs.minAmount = null
+      inputs.min_amount = null
     }
 
     if (maxAmount) {
       if (isNaN(maxAmount))
         errorMsg.push('Enter a valid Maximum Amount')
       else
-        inputs.maxAmount = Number(maxAmount)
+        inputs.max_amount = Number(maxAmount)
     } else {
-      inputs.maxAmount = null
+      inputs.max_amount = null
     }
 
-    if (inputs.startDate && inputs.endDate) {
-      if (inputs.startDate > inputs.endDate)
+    if (inputs.start_date && inputs.end_date) {
+      if (inputs.start_date > inputs.end_date)
         errorMsg.push('Start Date cannot be after End Date')
     }
-    if (inputs.minAmount && inputs.maxAmount) {
-      if (inputs.minAmount > inputs.maxAmount)
+    if (inputs.min_amount && inputs.max_amount) {
+      if (inputs.min_amount > inputs.max_amount)
         errorMsg.push('Min Amount cannot be greater than Max Amount')
     }
     return [errorMsg, inputs]
@@ -111,6 +126,7 @@ export default function AccountFilterForm() {
           <TextField
             fullWidth size="small"
             label="Max Amount ($)"
+            value={maxAmount}
             onChange={(event) => {setMaxAmount(event.target.value);}}
           />
         </Grid>
@@ -123,9 +139,12 @@ export default function AccountFilterForm() {
           />
         </Grid>
         <Grid item xs={12} display='flex' justifyContent='flex-end'>
-          <Button id="filter-btn" onClick={handleFilter} variant='contained'>
-            Filter
-          </Button>
+          { showBtn ?
+            <Box mr={1}>
+              <Button onClick={handleClearFilters} variant='contained' mr={5}>Clear Filters</Button>
+            </Box> : null
+          }
+          <Button onClick={handleFilterClick} variant='contained'>Filter</Button>
         </Grid>
       </Grid>
       </LocalizationProvider>

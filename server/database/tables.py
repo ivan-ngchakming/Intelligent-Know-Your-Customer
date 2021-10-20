@@ -60,3 +60,14 @@ image_table = sa.Table(
     sa.Column('date_created', sa.DateTime, server_default=func.now()),
     sa.Column('model', sa.ForeignKey('model.model_id'), nullable=False)
 )
+
+transaction_table = sa.Table(
+    'transaction',
+    metadata_obj,
+    sa.Column('id', sa.Integer, primary_key=True),
+    sa.Column('account_num', sa.ForeignKey('account.account_num'), nullable=False),
+    sa.Column('date', sa.DateTime, server_default=func.now()),
+    sa.Column('description', sa.String(300)),
+    sa.Column('amount', sa.Float, nullable=False),
+    sa.Column('balance', sa.Float, nullable=False),
+)

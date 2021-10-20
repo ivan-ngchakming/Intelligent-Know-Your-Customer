@@ -1,5 +1,6 @@
 import React from 'react';
 import { useHistory } from "react-router-dom";
+import { Box } from '@mui/system';
 import AppBar from '@mui/material/AppBar';
 import HomeIcon from '@mui/icons-material/Home';
 import BottomNavigation from '@mui/material/BottomNavigation';
@@ -42,6 +43,7 @@ export default function BottomAppBar({children, onChange}) {
   return (
     <>
       {children}
+      <Box height="70px" />
       <AppBar position="fixed" color="primary" sx={{ top: 'auto', bottom: 0 }}>
         <BottomNavigation
           showLabels

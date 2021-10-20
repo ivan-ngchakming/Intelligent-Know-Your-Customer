@@ -10,16 +10,18 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 const accounts = [
-  {type: 'Current', account_number: '1234', balance: 10123.21, currency: 'HKD'},
-  {type: 'Savings', account_number: '5678', balance: 50123.21, currency: 'HKD'},
+  {type: 'Current', account_num: '1', balance: 10123.21, currency: 'HKD'},
+  {type: 'Savings', account_num: '2', balance: 50123.21, currency: 'HKD'},
 ]
+// TODO: get actual account records from API
+
 
 export default function Home() {
-  // TODO: get actual account records from API
+  const username = localStorage.getItem('username');
   return (
     <div>
       <Typography variant="h4" sx={{textAlign: 'center', marginTop: 8}}>
-        Welcome Back, Doge
+        Welcome Back, {username}
       </Typography>
       <Container size='md' sx={{ mt: 8 }}>
         <TableContainer component={Paper}>
@@ -33,14 +35,14 @@ export default function Home() {
             </TableHead>
             <TableBody>
               {accounts.map(account => (
-                <TableRow>
+                <TableRow key={account.account_num}>
                   <TableCell>
                     <Link to={{
                       pathname: "/account",
-                      state: { accountNum: account.account_number, accountType: account.type },
+                      state: { accountNum: account.account_num, accountType: account.type },
                     }}>{account.type} Account</Link>
                   </TableCell>
-                  <TableCell>{account.account_number}</TableCell>
+                  <TableCell>{account.account_num}</TableCell>
                   <TableCell>HK ${account.balance}</TableCell>
                 </TableRow>
               ))}

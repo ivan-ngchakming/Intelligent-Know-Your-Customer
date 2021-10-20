@@ -18,15 +18,16 @@ export default function FaceId({ user }) {
   const [loggedIn, setLoggedIn] = useState(false)
   const webcamRef = React.useRef();
 
-  const login = useCallback((user_id, confidence) => {
+  const login = useCallback((user_id, confidence, username) => {
     clearTimeout(timer);
 
     setMsg("Login Success!");
     localStorage.setItem('userId', user_id);
+    localStorage.setItem('username', username);
 
     // Log login record to login history table
     window.server.auth.log_login(JSON.stringify({
-      user_id: user_id, 
+      user_id: user_id,
       confidence: confidence
     }));
 
@@ -46,7 +47,7 @@ export default function FaceId({ user }) {
       console.error(e);
       return;
     }
-      
+
     if (imageSrc) {
       const imageBase64 = imageSrc.split(',')[1]
       window.server.auth.login(imageBase64, user.user_id).then(res => {
@@ -57,11 +58,11 @@ export default function FaceId({ user }) {
             if (face.confidence > CONFIDENCE && !loggedIn) {
               setLoggedIn(true)
               clearTimeout(timer);
-              login(user.user_id, face.confidence);
+              login(user.user_id, face.confidence, user.name);
               return;
             }
           });
-        } 
+        }
       })
     }
     setTimer(setTimeout(streamVideo, 100));
@@ -82,17 +83,17 @@ export default function FaceId({ user }) {
 
   return (
     <>
-      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} onClick={() => {login(60)}}>
+      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} onClick={() => {login(1, 60, 'Peter')}}>
         <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
         Sign in
       </Typography>
-      
+
       <Box sx={{ mt: 1 }}>
         <Box
           sx={{
-            marginTop: 2, 
+            marginTop: 2,
             marginBottom: 2,
             width: '50vw',
             height: webcamHeight,
@@ -104,7 +105,7 @@ export default function FaceId({ user }) {
               justifyContent: 'center',
               position: 'relative',
               height: webcamHeight,
-              
+
             }}
           >
             <Box sx={{
@@ -114,7 +115,7 @@ export default function FaceId({ user }) {
               <ResizeObserver
                 onReflow={onResize}
               />
-              <Webcam 
+              <Webcam
                 style={{
                   width: '100%',
                   borderRadius: "1%",
