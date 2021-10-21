@@ -11,13 +11,13 @@ const columns = [
     field: 'date',
     headerName: 'Date',
     filterable: false,
-    flex: 0.3,
+    flex: 0.4,
   },
   {
     field: 'time',
     headerName: 'Time',
     sortable: false,
-    flex: 0.3,
+    flex: 0.4,
   },
   {
     field: 'description',

@@ -8,13 +8,17 @@ from server.database import engine
 def create(from_account_num, to_account_num, description, amount, date=None):
     trans_date = "DEFAULT" if (date is None) else (f"'{date}'")
 
-    balance = accounts.update_balance(to_account_num, amount)
-    balance = accounts.update_balance(from_account_num, -1 * amount)
+    to_balance = accounts.update_balance(to_account_num, amount)
+    from_balance = accounts.update_balance(from_account_num, -1 * amount)
 
     with engine.connect() as conn:
         query = text(
-            f"INSERT INTO transaction (from_account_num, to_account_num, description, amount, date, balance) "
-            f"VALUES ({from_account_num}, {to_account_num}, '{description}', {amount}, {trans_date}, '{balance}')"
+            f"""
+            INSERT INTO
+                transaction (from_account_num, to_account_num, description, amount, date, from_balance, to_balance)
+            VALUES
+                ({from_account_num}, {to_account_num}, '{description}', {amount}, {trans_date}, '{from_balance}', '{to_balance}')
+            """
         )
         conn.execute(query)
         conn.commit()
@@ -35,20 +39,20 @@ def get(account_num, min_amount, max_amount, start_date, end_date):
     with engine.connect() as conn:
         query = text(
             f"""
-            SELECT 
-                id, 
-                DATE_FORMAT(date, '%Y-%m-%d') AS date, 
-                DATE_FORMAT(date, '%l:%i %p') AS time, 
-                description, 
+            SELECT
+                id,
+                DATE_FORMAT(date, '%Y-%m-%d') AS date,
+                DATE_FORMAT(date, '%l:%i %p') AS time,
+                description,
                 IF(from_account_num = {account_num}, -amount, amount) as amount,
-                balance
-            FROM 
-                transaction 
-            WHERE 
-                from_account_num = {account_num} OR 
+                IF(from_account_num = {account_num}, from_balance, to_balance) as balance
+            FROM
+                transaction
+            WHERE
+                from_account_num = {account_num} OR
                 to_account_num = {account_num}
                 {filterText}
-            ORDER BY 
+            ORDER BY
                 date DESC
             """
         )

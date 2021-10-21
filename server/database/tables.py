@@ -42,8 +42,8 @@ transaction_table = sa.Table(
     sa.Column('date', sa.DateTime, server_default=func.now()),
     sa.Column('description', sa.String(300)),
     sa.Column('amount', sa.Float, nullable=False),
-    sa.Column('balance', sa.Float, nullable=False),
-    # extend_existing=True
+    sa.Column('from_balance', sa.Float, nullable=False),
+    sa.Column('to_balance', sa.Float, nullable=False),
 )
 
 model_table = sa.Table(
@@ -63,4 +63,3 @@ image_table = sa.Table(
     sa.Column('date_created', sa.DateTime, server_default=func.now()),
     sa.Column('model', sa.ForeignKey('model.model_id'), nullable=False)
 )
-
