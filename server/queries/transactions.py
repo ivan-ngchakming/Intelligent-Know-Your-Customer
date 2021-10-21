@@ -1,21 +1,24 @@
-from sqlalchemy import select, insert, update, text
+from sqlalchemy import text
 from . import accounts
 
 from server.database import engine
-from server.database.tables import transaction_table
 
 
 # insert new transaction into database and update account balance
-def create(account_num, description, amount, date=None):
+def create(from_account_num, to_account_num, description, amount, date=None):
     trans_date = "DEFAULT" if (date is None) else (f"'{date}'")
-    balance = accounts.update_balance(account_num, amount)
+
+    balance = accounts.update_balance(to_account_num, amount)
+    balance = accounts.update_balance(from_account_num, -1 * amount)
+
     with engine.connect() as conn:
         query = text(
-            f"INSERT INTO transaction (account_num, description, amount, date, balance) "
-            f"VALUES ({account_num}, '{description}', {amount}, {trans_date}, '{balance}')"
+            f"INSERT INTO transaction (from_account_num, to_account_num, description, amount, date, balance) "
+            f"VALUES ({from_account_num}, {to_account_num}, '{description}', {amount}, {trans_date}, '{balance}')"
         )
         conn.execute(query)
         conn.commit()
+
 
 # retrieve transaction records
 def get(account_num, min_amount, max_amount, start_date, end_date):
@@ -31,10 +34,23 @@ def get(account_num, min_amount, max_amount, start_date, end_date):
 
     with engine.connect() as conn:
         query = text(
-            f"SELECT id, DATE_FORMAT(date, '%Y-%m-%d') AS date, DATE_FORMAT(date, '%l:%i %p') AS time, "
-            f"description, amount, balance FROM transaction "
-            f"WHERE account_num = {account_num} {filterText}"
-            f"ORDER BY date DESC"
+            f"""
+            SELECT 
+                id, 
+                DATE_FORMAT(date, '%Y-%m-%d') AS date, 
+                DATE_FORMAT(date, '%l:%i %p') AS time, 
+                description, 
+                IF(from_account_num = {account_num}, -amount, amount) as amount,
+                balance
+            FROM 
+                transaction 
+            WHERE 
+                from_account_num = {account_num} OR 
+                to_account_num = {account_num}
+                {filterText}
+            ORDER BY 
+                date DESC
+            """
         )
         result = conn.execute(query)
         return [dict(row) for row in result.all()]

@@ -83,7 +83,7 @@ export default function FaceId({ user }) {
 
   return (
     <>
-      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} onClick={() => {login(1, 60, 'Peter')}}>
+      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} onClick={() => {login(user.user_id, 60, user.name)}}>
         <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
@@ -135,7 +135,7 @@ export default function FaceId({ user }) {
           {msg}
         </Typography>
         <Typography variant="body1" sx={{textAlign: 'center', marginTop: 1}}>
-          {loggedIn ? "Taking you to Home page..." : `Hello ${user.name}, please confirm your face identity`}
+          {loggedIn ? "Taking you to Home page..." : `Hello ${user.name.replace(/^\w/, (c) => c.toUpperCase())}, please confirm your face identity`}
         </Typography>
       </Box>
     </>
