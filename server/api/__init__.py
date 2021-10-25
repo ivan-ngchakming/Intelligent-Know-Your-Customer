@@ -1,6 +1,6 @@
 import logging
 
-from .foo import *
+from .accounts import *
 from .auth import *
 from .transactions import *
 from .user import *
