@@ -9,12 +9,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
-const accounts = [
-  {type: 'Current', account_num: '1', balance: 10123.21, currency: 'HKD'},
-  {type: 'Savings', account_num: '2', balance: 50123.21, currency: 'HKD'},
-]
-// TODO: get actual account records from API
-
 
 const Home = () => {
   const [accounts, setAccounts] = useState([]);
@@ -57,7 +51,7 @@ const Home = () => {
                   <TableCell>
                     <Link to={{
                       pathname: "/account",
-                      state: { accountNum: account.account_num, accountType: account.type },
+                      state: { accountNum: account.account_num, accountType: account.account_type },
                     }}>{account.account_type} Account</Link>
                   </TableCell>
                   <TableCell>{account.account_num}</TableCell>

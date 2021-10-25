@@ -28,9 +28,9 @@ def create(from_account_num, to_account_num, description, amount, date=None):
 def get(account_num, min_amount, max_amount, start_date, end_date):
     filterText = ""
     if (min_amount is not None):
-        filterText += f"AND amount >= {min_amount} "
+        filterText += f"AND (IF (from_account_num = {account_num}, -amount >= {min_amount}, amount >= {min_amount})) "
     if (max_amount is not None):
-        filterText += f"AND amount <= {max_amount} "
+        filterText += f"AND (IF (from_account_num = {account_num}, -amount <= {max_amount}, amount <= {max_amount})) "
     if (start_date is not None):
         filterText += f"AND date >= '{start_date}' "
     if (end_date is not None):
@@ -49,8 +49,8 @@ def get(account_num, min_amount, max_amount, start_date, end_date):
             FROM
                 transaction
             WHERE
-                from_account_num = {account_num} OR
-                to_account_num = {account_num}
+                (from_account_num = {account_num} OR
+                to_account_num = {account_num})
                 {filterText}
             ORDER BY
                 date DESC
