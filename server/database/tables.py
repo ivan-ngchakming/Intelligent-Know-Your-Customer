@@ -55,11 +55,17 @@ model_table = sa.Table(
     sa.Column('user', sa.ForeignKey('user.user_id'), nullable=False)
 )
 
-image_table = sa.Table(
-    'image',
+currency_table = sa.Table(
+    'currency',
     metadata_obj,
-    sa.Column('image_id', sa.Integer, primary_key=True),
-    sa.Column('path', sa.String(300), nullable=False),
-    sa.Column('date_created', sa.DateTime, server_default=func.now()),
-    sa.Column('model', sa.ForeignKey('model.model_id'), nullable=False)
+    sa.Column('currency', sa.String(10), primary_key=True),
+    sa.Column('symbol', sa.String(300), nullable=False),
+)
+
+exchange_rate_table = sa.Table(
+    'exchange_rate',
+    metadata_obj,
+    sa.Column('from_currency', sa.ForeignKey('currency.currency'), primary_key=True),
+    sa.Column('to_currency', sa.ForeignKey('currency.currency'), primary_key=True),
+    sa.Column('rate', sa.Float, nullable=False),
 )
