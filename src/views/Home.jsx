@@ -61,7 +61,7 @@ const Home = () => {
                     }}>{account.account_type} Account</Link>
                   </TableCell>
                   <TableCell>{account.account_num}</TableCell>
-                  <TableCell>HK {`${account.balance}`}</TableCell>
+                  <TableCell>{`${account.currency} ${account.balance}`}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
