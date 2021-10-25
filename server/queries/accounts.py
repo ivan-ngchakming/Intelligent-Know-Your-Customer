@@ -34,17 +34,39 @@ def get(**kwargs):
     account_num = kwargs.get('account_num')
     user_id = kwargs.get('user_id')
 
+    if account_num is not None:
+        filters = f"WHERE account_num = {account_num}"
+    elif user_id is not None:
+        filters = "WHERE user_id = {user_id}"
+    else:
+        raise Exception("no parameters provided to select account")
+        
     with engine.connect() as conn:
-        if account_num is not None:
-            query = text(
-                f"SELECT * FROM account WHERE account_num = {account_num}"
-            )
-            result = conn.execute(query)
-            return dict(result.first())
-        elif user_id is not None:
-            print('TODO')
-        else:
-            raise Exception("no parameters provided to select account")
+        query = text(
+            f"SELECT * FROM account {filters}"
+        )
+        result = conn.execute(query)
+        return dict(result.first())
+
+
+# get account info by account number or user ID
+def list_accounts(user_id=None, username=None):
+    filters = ""
+    if user_id is not None:
+        filters = f"WHERE owner = {user_id}"
+    elif username is not None:
+        filters = f"""
+        JOIN
+            user on user.user_id = account.owner
+        WHERE
+            user.name = '{username}'
+        """
+    with engine.connect() as conn:
+        query = text(
+            f"SELECT * FROM account {filters}"
+        )
+        result = conn.execute(query)
+        return [dict(row) for row in result.all()]
 
 
 # increment/decrement balance and return updated balance
