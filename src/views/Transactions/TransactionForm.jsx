@@ -6,7 +6,7 @@ import {
 import React, { useEffect, useState } from 'react';
 
 function renderAccount(account) {
-  return `${account.account_number} - balance: ${account.balance}`
+  return `${account.account_num} - ${account.account_type} - balance: $${account.balance}`
 }
 
 export default function TransactionForm({onSubmit, mode}) {
@@ -17,6 +17,8 @@ export default function TransactionForm({onSubmit, mode}) {
     amount: 0,
   });
 
+  const userId = localStorage.getItem('userId');
+
   const handleValueChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
@@ -25,15 +27,21 @@ export default function TransactionForm({onSubmit, mode}) {
     onSubmit(values)
   }
 
+  const fetchAccounts = (userId) => {
+    window.server.accounts.list_accounts(
+      JSON.stringify({
+        userId: userId,
+      })
+    ).then(res => {
+      const data = JSON.parse(res);
+      console.log(data);
+      setUserAccounts(data);
+    })
+  };
+
   useEffect(() => {
-    if (!userAccounts) {
-      setUserAccounts([
-        {account_number: 1234, balance: 0},
-        {account_number: 1235, balance: 0},
-        {account_number: 1236, balance: 0},
-      ])
-    }
-  }, [userAccounts])
+    fetchAccounts(userId);
+  }, [userId]);
 
   return (
     <>
@@ -49,7 +57,12 @@ export default function TransactionForm({onSubmit, mode}) {
               onChange={handleValueChange('from')}
             >
               {userAccounts && userAccounts.map(account => (
-                <MenuItem key={`account-option-${account.account_number}`} value={account.account_number}>{renderAccount(account)}</MenuItem>
+                <MenuItem 
+                    key={`account-option-${account.account_num}`}
+                    value={account.account_num}
+                  >
+                  {renderAccount(account)}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -72,7 +85,7 @@ export default function TransactionForm({onSubmit, mode}) {
                 onChange={handleValueChange('to')}
               >
                 {userAccounts && userAccounts.map(account => (
-                  <MenuItem value={account.account_number}>{renderAccount(account)}</MenuItem>
+                  <MenuItem value={account.account_num}>{renderAccount(account)}</MenuItem>
                 ))}
               </Select>
             </FormControl>

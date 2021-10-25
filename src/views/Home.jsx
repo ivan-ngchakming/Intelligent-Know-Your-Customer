@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Typography, Container } from '@mui/material';
 import Paper from '@mui/material/Paper';
@@ -16,8 +16,26 @@ const accounts = [
 // TODO: get actual account records from API
 
 
-export default function Home() {
+const Home = () => {
+  const [accounts, setAccounts] = useState([]);
   const username = localStorage.getItem('username');
+
+  const fetchAccounts = (username) => {
+    window.server.accounts.list_accounts(
+      JSON.stringify({
+        username: username,
+      })
+    ).then(res => {
+      const data = JSON.parse(res);
+      console.log(data);
+      setAccounts(data);
+    })
+  };
+
+  useEffect(() => {
+    fetchAccounts(username);
+  }, [username])
+
   return (
     <div>
       <Typography variant="h4" sx={{textAlign: 'center', marginTop: 8}}>
@@ -40,10 +58,10 @@ export default function Home() {
                     <Link to={{
                       pathname: "/account",
                       state: { accountNum: account.account_num, accountType: account.type },
-                    }}>{account.type} Account</Link>
+                    }}>{account.account_type} Account</Link>
                   </TableCell>
                   <TableCell>{account.account_num}</TableCell>
-                  <TableCell>HK ${account.balance}</TableCell>
+                  <TableCell>HK {`${account.balance}`}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -53,3 +71,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default Home;
