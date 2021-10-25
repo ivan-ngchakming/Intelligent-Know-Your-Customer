@@ -1,8 +1,6 @@
 import React from 'react';
 import { Grid, Box } from '@mui/material';
 
-// TODO: API for getting account info using accountNum
-
 export default function AccountOverview({accountNum}) {
   return (
     <>
