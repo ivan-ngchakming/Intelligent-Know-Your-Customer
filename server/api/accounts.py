@@ -18,3 +18,13 @@ class Accounts(QObject):
         result = accounts.list_accounts(user_id=user_id, username=username)
         
         return jsonify(result)
+
+    @pyqtSlot(str, result=str)
+    def get_account(self, req):
+        params = json.loads(req)
+        print('query variables', params)
+
+        account_num = params.get('accountNum')
+        result = accounts.get(account_num=account_num)
+        
+        return jsonify(result)

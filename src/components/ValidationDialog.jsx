@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function ValidationDialog({msg, open, handleClose}) {
+export default function ValidationDialog({title, msg, open, handleClose}) {
   return (
     <>
       <Dialog
@@ -16,7 +16,7 @@ export default function ValidationDialog({msg, open, handleClose}) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Please check your Inputs"}
+          {title}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
