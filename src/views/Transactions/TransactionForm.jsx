@@ -66,7 +66,7 @@ export default function TransactionForm({onSubmit, mode}) {
       </FormControl>
       {mode === 'payment' ? (
         <FormControl fullWidth sx={{mt: 2}}>
-          <TextField id="to-account" label="To" variant="outlined" onChange={handleValueChange('to')}/>
+          <TextField id="to-account" type='number' label="To" variant="outlined" onChange={handleValueChange('to')}/>
         </FormControl>
       ) : (
         <FormControl fullWidth sx={{mt: 2}}>
@@ -87,13 +87,14 @@ export default function TransactionForm({onSubmit, mode}) {
       <FormControl fullWidth sx={{mt: 2}}>
         <InputLabel htmlFor="amount">Amount</InputLabel>
         <OutlinedInput
-        id="amount"
-        label="Amount"
-        variant="outlined"
-        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-        onChange={handleValueChange('amount')}
-        startAdornment={<InputAdornment position="start">$</InputAdornment>}
-      />
+          id="amount"
+          label="Amount"
+          variant="outlined"
+          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+          onChange={handleValueChange('amount')}
+          type='number'
+          startAdornment={<InputAdornment position="start">$</InputAdornment>}
+        />
       </FormControl>
 
       <FormControl fullWidth sx={{mt: 2}}>
