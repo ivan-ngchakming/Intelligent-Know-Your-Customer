@@ -46,7 +46,10 @@ def get(**kwargs):
             f"SELECT * FROM account {filters}"
         )
         result = conn.execute(query)
-        return dict(result.first())
+        try:
+            return dict(result.first())
+        except TypeError:
+            return None
 
 
 # get account info by account number or user ID

@@ -10,6 +10,7 @@ import { a11yProps } from './utils';
 export default function Transactions() {
   const [tab, setTab] = useState(0);
   const [validationMsg, setValidationMsg] = useState(null);
+  const [validationTitle, setValidationTitle] = useState("Please check your Inputs");
   const [open, setOpen] = useState(false);
 
   const handleTabChange = (event, newValue) => {
@@ -42,12 +43,43 @@ export default function Transactions() {
       error = true;
       errorMsg.push('From account and To account must be different')
     }
-
+    
     if (error) {
       setValidationMsg(errorMsg);
       handleDialogOpen();
+    } else {
+      createTransaction({
+        fromAccountNum: values.from,
+        toAccountNum: values.to,
+        description: values.description,
+        amount: values.amount,
+      });
     }
-  }
+  };
+
+  const createTransaction = ({fromAccountNum, toAccountNum, description, amount}) => {
+    window.server.transactions.create_transaction(
+      JSON.stringify({
+        fromAccountNum: fromAccountNum,
+        toAccountNum: toAccountNum,
+        description: description,
+        amount: amount,
+      })
+    ).then(res => {
+      if (res === 'Error') {
+        setValidationMsg([
+          `To account with account number ${toAccountNum} does not exist.`
+        ]);
+        handleDialogOpen();
+      } else {
+        setValidationMsg([
+          "Transaction successfully created!"
+        ]);
+        setValidationTitle("Tada!")
+        handleDialogOpen();
+      }
+    });
+  };
 
   const handleDialogOpen = () => {
     setOpen(true);
@@ -55,6 +87,7 @@ export default function Transactions() {
 
   const handleDialogClose = () => {
     setOpen(false);
+    setValidationTitle("Please check your Inputs");
   };
 
   return (
@@ -77,7 +110,12 @@ export default function Transactions() {
 
       </Container>
 
-      <ValidationDialog open={open} msg={validationMsg} handleClose={handleDialogClose} />
+      <ValidationDialog 
+        title={validationTitle}
+        open={open} 
+        msg={validationMsg} 
+        handleClose={handleDialogClose} 
+      />
     </>
   )
 }

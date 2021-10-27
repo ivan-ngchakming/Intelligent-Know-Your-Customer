@@ -23,3 +23,20 @@ class Transactions(QObject):
         result = transactions.get(account_num, min_amount, max_amount, start_date, end_date)
         
         return jsonify(result)
+
+    @pyqtSlot(str, result=str)
+    def create_transaction(self, req):
+        params = json.loads(req)
+        print('query variables', params)
+
+        from_account_num = params.get('fromAccountNum')
+        to_account_num = params.get('toAccountNum')
+        description = params.get('description')
+        amount = params.get('amount')
+
+        try:
+            result = transactions.create(from_account_num, to_account_num, description, amount)
+            return jsonify(result)
+
+        except TypeError:
+            return "Error"
