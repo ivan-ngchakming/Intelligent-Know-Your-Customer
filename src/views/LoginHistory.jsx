@@ -40,6 +40,7 @@ export default function LoginHistory() {
                 <TableCell>Login Date</TableCell>
                 <TableCell>Logout Date</TableCell>
                 <TableCell>Confidence</TableCell>
+                <TableCell>Duration</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -50,6 +51,7 @@ export default function LoginHistory() {
                   <TableCell>{formatDatetime(row.login_date)}</TableCell>
                   <TableCell>{formatDatetime(row.logout_date)}</TableCell>
                   <TableCell>{row.confidence}</TableCell>
+                  <TableCell>{row.duration}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

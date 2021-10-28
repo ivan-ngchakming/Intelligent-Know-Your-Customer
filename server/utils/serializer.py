@@ -16,8 +16,13 @@ def alchemyencoder(obj):
     json_str = json.dumps([dict(r) for r in res], default=alchemyencoder)
 
     """
-    if isinstance(obj, datetime.date):
+    if (
+        isinstance(obj, datetime.date) or 
+        isinstance(obj, datetime.datetime)
+    ):
         return obj.isoformat()
+    elif isinstance(obj, datetime.timedelta):
+        return str(obj)
     elif isinstance(obj, decimal.Decimal):
         return float(obj)
 
