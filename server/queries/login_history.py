@@ -1,7 +1,6 @@
 import datetime
 
-from sqlalchemy import select, insert, update
-from sqlalchemy import func
+from sqlalchemy import select, insert, update, text, func
 
 from server.database import engine
 from server.database.tables import login_history_table
@@ -28,12 +27,20 @@ def create(user_id, confidence):
 
 def list_all(user_id):
     with engine.connect() as conn:
-        result = conn.execute(
-            select(login_history_table)
-            .where(login_history_table.c.user_id==user_id)
-            .order_by(login_history_table.c.login_date.desc())
-            .limit(5)
-        )
+        stmt = text(f"""
+            SELECT
+                user_id, login_date, logout_date, confidence, 
+                TIMEDIFF(logout_date, login_date) as duration
+            FROM
+                login_history
+            WHERE
+                user_id = {user_id}
+            ORDER BY
+                login_date DESC
+            LIMIT
+                5
+        """)
+        result = conn.execute(stmt)
         return [dict(row) for row in result.all()]
 
 
