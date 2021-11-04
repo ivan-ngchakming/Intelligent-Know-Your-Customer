@@ -32,3 +32,14 @@ def define_rates(data):
 		)
 		conn.execute(query)
 		conn.commit()
+
+def get_symbol(currency):
+	with engine.connect() as conn:
+		query = text(
+			f"""
+			SELECT symbol FROM currency
+			WHERE currency = '{currency}'
+			"""
+		)
+		result = conn.execute(query)
+		return dict(result.first())['symbol']

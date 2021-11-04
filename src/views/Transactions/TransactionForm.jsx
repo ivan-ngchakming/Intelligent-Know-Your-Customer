@@ -5,7 +5,7 @@ import {
 import React, { useEffect, useState } from 'react';
 
 function renderAccount(account) {
-  return `${account.account_num} - ${account.account_type} - balance: $${account.balance}`
+  return `${account.account_num} - ${account.account_type} - balance: ${account.currency_symbol}${account.balance}`
 }
 
 export default function TransactionForm({onSubmit, mode}) {
@@ -34,7 +34,7 @@ export default function TransactionForm({onSubmit, mode}) {
       })
     ).then(res => {
       const data = JSON.parse(res);
-      console.log(data);
+      console.log('user accounts:', data);
       setUserAccounts(data);
     })
   };
@@ -55,7 +55,7 @@ export default function TransactionForm({onSubmit, mode}) {
           onChange={handleValueChange('from')}
         >
           {userAccounts && userAccounts.map(account => (
-            <MenuItem 
+            <MenuItem
                 key={`account-option-${account.account_num}`}
                 value={account.account_num}
               >
@@ -106,7 +106,7 @@ export default function TransactionForm({onSubmit, mode}) {
         onChange={handleValueChange('description')}
       />
       </FormControl>
-      
+
       <Box display='flex' justifyContent='flex-end' mt={5} mr={0}>
         <Button onClick={handleSubmit} variant='contained'>
           Submit

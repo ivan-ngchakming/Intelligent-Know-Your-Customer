@@ -53,7 +53,7 @@ def get(account_num, min_amount, max_amount, start_date, end_date):
                 to_account_num = {account_num})
                 {filterText}
             ORDER BY
-                date DESC
+                date DESC, time DESC
             """
         )
         result = conn.execute(query)

@@ -40,11 +40,13 @@ const columns = [
 
 export default function AccountDetail(props) {
   const { accountNum, accountType } = props.location.state;
+  const [accountInfo, setAccountInfo] = useState({})
   const [rows, setRows] = useState([])
 
   useEffect(() => {
     setRows([]) // it only works if i add this or resize the window whhHyYY
     updateRows({})
+    getAccountInfo()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -60,6 +62,21 @@ export default function AccountDetail(props) {
     })
   }
 
+  // get account balance, currency and symbol
+  const getAccountInfo = () => {
+    window.server.accounts.get_account(
+      JSON.stringify({
+        accountNum: accountNum,
+      })
+    ).then(res => {
+      const result = JSON.parse(res)
+      console.log('account information', result)
+      setAccountInfo(
+        {currency: result.currency, balance: result.balance, currency_symbol: result.currency_symbol}
+      )
+    })
+  }
+
   return (
     <>
       <Typography variant="h4" sx={{ textAlign: 'center', marginTop: 5 }}>
@@ -67,8 +84,11 @@ export default function AccountDetail(props) {
       </Typography>
 
       <Container size='md' sx={{ mt:4 }}>
-        <AccountOverview accountNum={accountNum} />
-        <AccountFilterForm updateRows={updateRows}/>
+        <AccountOverview
+          accountNum={accountNum} balance={accountInfo.balance}
+          currency={accountInfo.currency} currency_symbol={accountInfo.currency_symbol}
+        />
+        <AccountFilterForm updateRows={updateRows} currency_symbol={accountInfo.currency_symbol}/>
 
         {/* transaction records */}
         <DataGrid

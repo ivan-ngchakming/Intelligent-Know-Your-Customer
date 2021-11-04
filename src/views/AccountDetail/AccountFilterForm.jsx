@@ -7,7 +7,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 
-export default function AccountFilterForm({updateRows}) {
+export default function AccountFilterForm({updateRows, currency_symbol}) {
   const [validationMsg, setValidationMsg] = useState(null);
   const [open, setOpen] = useState(false);
   const [startDate, setStartDate] = useState(null);
@@ -109,7 +109,7 @@ export default function AccountFilterForm({updateRows}) {
         <Grid item xs={6}>
           <TextField
             fullWidth size="small"
-            label="Min Amount ($)"
+            label={"Min Amount (" + currency_symbol + ")"}
             value={minAmount}
             onChange={(event) => {setMinAmount(event.target.value);}}
           />
@@ -125,7 +125,7 @@ export default function AccountFilterForm({updateRows}) {
         <Grid item xs={6}>
           <TextField
             fullWidth size="small"
-            label="Max Amount ($)"
+            label={"Max Amount (" + currency_symbol + ")"}
             value={maxAmount}
             onChange={(event) => {setMaxAmount(event.target.value);}}
           />

@@ -9,7 +9,6 @@ user_table = sa.Table(
     metadata_obj,
     sa.Column('user_id', sa.Integer, primary_key=True),
     sa.Column('name', sa.String(30), nullable=False),
-    sa.Column('password', sa.String(30)),
     sa.Column('joined_date', sa.DateTime, nullable=False, server_default=func.now()),
 
 )
