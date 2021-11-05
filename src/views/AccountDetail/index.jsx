@@ -44,14 +44,6 @@ const columns = [
   },
 ];
 
-const Footer = ({currency}) => {
-  return (
-    <div style={{marginLeft: '15px'}}>
-      <p>Note: Transaction amount and account balance are in {currency}</p>
-    </div>
-  )
-};
-
 export default function AccountDetail(props) {
   const { accountNum, accountType } = props.location.state;
   const [accountInfo, setAccountInfo] = useState({})
@@ -112,13 +104,13 @@ export default function AccountDetail(props) {
           autoPageSize 
           disableColumnMenu
           disableSelectionOnClick
-          components={{
-            Footer: Footer,
-          }}
-          componentsProps={{
-            footer: { currency: accountInfo.currency },
-          }}
+          hideFooterSelectedRowCount
         />
+        
+        <div style={{marginLeft: '15px'}}>
+          <p>Note: Transaction amount and account balance are in {accountInfo.currency}</p>
+        </div>
+
       </Container>
     </>
   );
