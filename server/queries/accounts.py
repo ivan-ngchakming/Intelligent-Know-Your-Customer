@@ -35,15 +35,23 @@ def get(**kwargs):
     user_id = kwargs.get('user_id')
 
     if account_num is not None:
-        filters = f"WHERE account_num = {account_num}"
+        filters = f"WHERE account.account_num = {account_num}"
     elif user_id is not None:
-        filters = f"WHERE user_id = {user_id}"
+        filters = f"WHERE account.user_id = {user_id}"
     else:
         raise Exception("no parameters provided to select account")
-        
+
     with engine.connect() as conn:
         query = text(
-            f"SELECT * FROM account {filters}"
+            f"""
+            SELECT
+                account.*, currency.symbol AS currency_symbol
+            FROM
+                account
+            JOIN
+                currency on currency.currency = account.currency
+            {filters}
+            """
         )
         result = conn.execute(query)
         try:
@@ -66,7 +74,15 @@ def list_accounts(user_id=None, username=None):
         """
     with engine.connect() as conn:
         query = text(
-            f"SELECT * FROM account {filters}"
+            f"""
+            SELECT
+                account.*, currency.symbol AS currency_symbol
+            FROM
+                account
+            JOIN
+                currency on currency.currency = account.currency
+            {filters}
+            """
         )
         result = conn.execute(query)
         return [dict(row) for row in result.all()]
@@ -78,7 +94,7 @@ def update_balance(account_num, amount, base_currency):
         query = text(
             f"""
             UPDATE
-                account as a SET a.balance = 
+                account as a SET a.balance =
                 (
                     SELECT
                         balance + ({amount}) * e.rate

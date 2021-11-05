@@ -78,7 +78,7 @@ export default function AccountDetail(props) {
       const result = JSON.parse(res)
       console.log('account information', result)
       setAccountInfo(
-        {currency: result.currency, balance: result.balance, currency_symbol: result.currency_symbol}
+        {currency: result.currency, balance: result.balance.toFixed(2), currency_symbol: result.currency_symbol}
       )
     })
   }
@@ -100,13 +100,13 @@ export default function AccountDetail(props) {
         <DataGrid
           columns={columns} rows={rows} density="compact"
           pageSize={5}
-          autoHeight 
-          autoPageSize 
+          autoHeight
+          autoPageSize
           disableColumnMenu
           disableSelectionOnClick
           hideFooterSelectedRowCount
         />
-        
+
         <div style={{marginLeft: '15px'}}>
           <p>Note: Transaction amount and account balance are in {accountInfo.currency}</p>
         </div>

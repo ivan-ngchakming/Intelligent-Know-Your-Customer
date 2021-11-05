@@ -17,8 +17,6 @@ class Accounts(QObject):
         username = params.get('username') or None
         result = accounts.list_accounts(user_id=user_id, username=username) # this is a list of dictionaries
 
-        for row in result:
-            row['currency_symbol'] = currency.get_symbol(row['currency'])
         return jsonify(result)
 
     @pyqtSlot(str, result=str)
@@ -28,6 +26,5 @@ class Accounts(QObject):
 
         account_num = params.get('accountNum')
         result = accounts.get(account_num=account_num)
-        result['currency_symbol'] = currency.get_symbol(result['currency'])
 
         return jsonify(result)
