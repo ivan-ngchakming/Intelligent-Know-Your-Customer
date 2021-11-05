@@ -43,7 +43,7 @@ export default function Transactions() {
       error = true;
       errorMsg.push('From account and To account must be different')
     }
-    
+
     if (error) {
       setValidationMsg(errorMsg);
       handleDialogOpen();
@@ -95,26 +95,26 @@ export default function Transactions() {
       <Container size='md' sx={{ mt: 8 }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={tab} onChange={handleTabChange} aria-label="transaction-tabs">
-            <Tab label="Make a Payment" {...a11yProps('transactions', 0)} />
-            <Tab label="Make a Transfer" {...a11yProps('transactions', 1)} />
+            <Tab label="Make a Transfer" {...a11yProps('transactions', 0)} />
+            <Tab label="Make a Payment" {...a11yProps('transactions', 1)} />
           </Tabs>
         </Box>
 
         <TabPanel value={tab} index={0}>
-          <TransactionForm onSubmit={onSubmit} mode='payment' />
+          <TransactionForm onSubmit={onSubmit} mode='transfer' />
         </TabPanel>
 
         <TabPanel value={tab} index={1}>
-          <TransactionForm onSubmit={onSubmit} mode='transfer' />
+          <TransactionForm onSubmit={onSubmit} mode='payment' />
         </TabPanel>
 
       </Container>
 
-      <ValidationDialog 
+      <ValidationDialog
         title={validationTitle}
-        open={open} 
-        msg={validationMsg} 
-        handleClose={handleDialogClose} 
+        open={open}
+        msg={validationMsg}
+        handleClose={handleDialogClose}
       />
     </>
   )
