@@ -29,14 +29,28 @@ const columns = [
     field: 'amount',
     headerName: 'Amount',
     flex: 0.4,
+    valueFormatter: (params) => {
+      return params.value.toFixed(2)
+    },
   },
   {
     field: 'balance',
     headerName: 'Balance',
     sortable: false,
     flex: 0.4,
+    valueFormatter: (params) => {
+      return params.value.toFixed(2)
+    },
   },
 ];
+
+const Footer = ({currency}) => {
+  return (
+    <div style={{marginLeft: '15px'}}>
+      <p>Note: Transaction amount and account balance are in {currency}</p>
+    </div>
+  )
+};
 
 export default function AccountDetail(props) {
   const { accountNum, accountType } = props.location.state;
@@ -94,7 +108,16 @@ export default function AccountDetail(props) {
         <DataGrid
           columns={columns} rows={rows} density="compact"
           pageSize={5}
-          autoHeight autoPageSize disableColumnMenu
+          autoHeight 
+          autoPageSize 
+          disableColumnMenu
+          disableSelectionOnClick
+          components={{
+            Footer: Footer,
+          }}
+          componentsProps={{
+            footer: { currency: accountInfo.currency },
+          }}
         />
       </Container>
     </>

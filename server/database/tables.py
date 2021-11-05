@@ -29,7 +29,7 @@ account_table = sa.Table(
     sa.Column('owner', sa.ForeignKey('user.user_id'), nullable=False),
     sa.Column('balance', sa.Float, nullable=False),
     sa.Column('account_type', sa.String(10), nullable=False),
-    sa.Column('currency', sa.String(10), nullable=False)
+    sa.Column('currency', sa.ForeignKey('currency.currency'), nullable=False)
 )
 
 transaction_table = sa.Table(
