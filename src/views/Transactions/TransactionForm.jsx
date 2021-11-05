@@ -5,7 +5,7 @@ import {
 import React, { useEffect, useState } from 'react';
 
 function renderAccount(account) {
-  return `${account.account_num} - ${account.account_type} - balance: ${account.currency_symbol}${account.balance}`
+  return `${account.account_num} - ${account.account_type} (${account.currency}) - balance: ${account.currency_symbol}${account.balance}`
 }
 
 export default function TransactionForm({onSubmit, mode}) {

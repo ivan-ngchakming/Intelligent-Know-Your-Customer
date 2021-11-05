@@ -17,26 +17,31 @@ def fill_dummy_data():
     currency.create(currencies)
 
     rates = [
+        ('HKD', 'HKD', 1),
         ('HKD', 'USD', 0.13),
         ('HKD', 'EUR', 0.11),
         ('HKD', 'GBP', 0.09),
         ('HKD', 'CAD', 0.16),
 
+        ('USD', 'USD', 1),
         ('USD', 'HKD', 7.77),
         ('USD', 'EUR', 0.86),
         ('USD', 'GBP', 0.73),
         ('USD', 'CAD', 1.24),
 
+        ('EUR', 'EUR', 1),
         ('EUR', 'USD', 1.16),
         ('EUR', 'HKD', 9.05),
         ('EUR', 'GBP', 0.85),
         ('EUR', 'CAD', 1.44),
 
+        ('GBP', 'GBP', 1),
         ('GBP', 'USD', 1.38),
         ('GBP', 'EUR', 1.18),
         ('GBP', 'HKD', 10.7),
         ('GBP', 'CAD', 1.70),
 
+        ('CAD', 'CAD', 1),
         ('CAD', 'USD', 0.81),
         ('CAD', 'EUR', 0.69),
         ('CAD', 'GBP', 0.59),
@@ -57,17 +62,29 @@ def fill_dummy_data():
 
         account1 = accounts.create(user_id, 'Current', 2000, 'HKD')
         account2 = accounts.create(user_id, 'Savings', 10000, 'HKD')
-        account2 = accounts.create(user_id, 'Euro', 500, 'EUR')
         account_ids += [account1['account_num'], account2['account_num']]
+        for curr_abb, curr in [
+            ('USD', 'American'),
+            ('EUR', 'Euro'),
+            ('GBP', 'British'),
+            ('CAD', 'Canadian')
+        ]:
+            foreign_account = accounts.create(user_id, curr, random.randint(500, 10000), curr_abb)
+            account_ids.append(foreign_account['account_num'])
 
     # generate some random transactions
     now = datetime.now()
-    for i in range(random.randint(15, 30)):
-        now += timedelta(days=random.randint(1,10)) + timedelta(hours=random.randint(1, 10)) + timedelta(minutes=random.randint(1, 30))
-        dt = now.strftime("%Y-%m-%d %H:%M:%S")
-        from_account, to_account = random.sample(account_ids, 2)
-        transactions.create(from_account, to_account, f'transaction {i+1}', random.randint(-100, 100), dt)
+    transaction_date = now - timedelta(days=1000)
+    for i in range(random.randint(50, 100)):
+        transaction_date += timedelta(days=random.randint(1, 5)) + timedelta(hours=random.randint(1, 10)) + timedelta(minutes=random.randint(1, 30))
 
+        if transaction_date < now:
+            dt = transaction_date.strftime("%Y-%m-%d %H:%M:%S")
+            from_account, to_account = random.sample(account_ids, 2)
+            transactions.create(from_account, to_account, f'transaction {i+1}', random.randint(1, 100), dt)
+        else:
+            print('Skipping transaction generations due to date being in the future')
+            break
 
 def populate():
     fill_dummy_data()

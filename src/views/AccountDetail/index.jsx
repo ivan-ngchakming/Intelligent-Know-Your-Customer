@@ -29,12 +29,18 @@ const columns = [
     field: 'amount',
     headerName: 'Amount',
     flex: 0.4,
+    valueFormatter: (params) => {
+      return params.value.toFixed(2)
+    },
   },
   {
     field: 'balance',
     headerName: 'Balance',
     sortable: false,
     flex: 0.4,
+    valueFormatter: (params) => {
+      return params.value.toFixed(2)
+    },
   },
 ];
 
@@ -94,8 +100,17 @@ export default function AccountDetail(props) {
         <DataGrid
           columns={columns} rows={rows} density="compact"
           pageSize={5}
-          autoHeight autoPageSize disableColumnMenu
+          autoHeight 
+          autoPageSize 
+          disableColumnMenu
+          disableSelectionOnClick
+          hideFooterSelectedRowCount
         />
+        
+        <div style={{marginLeft: '15px'}}>
+          <p>Note: Transaction amount and account balance are in {accountInfo.currency}</p>
+        </div>
+
       </Container>
     </>
   );

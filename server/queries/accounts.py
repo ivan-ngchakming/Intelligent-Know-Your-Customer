@@ -37,7 +37,7 @@ def get(**kwargs):
     if account_num is not None:
         filters = f"WHERE account_num = {account_num}"
     elif user_id is not None:
-        filters = "WHERE user_id = {user_id}"
+        filters = f"WHERE user_id = {user_id}"
     else:
         raise Exception("no parameters provided to select account")
         
@@ -73,16 +73,28 @@ def list_accounts(user_id=None, username=None):
 
 
 # increment/decrement balance and return updated balance
-def update_balance(account_num, amount):
+def update_balance(account_num, amount, base_currency):
     with engine.connect() as conn:
         query = text(
             f"""
-            UPDATE account SET balance = balance + ({amount})
-            WHERE account_num = {account_num}
+            UPDATE
+                account as a SET a.balance = 
+                (
+                    SELECT
+                        balance + ({amount}) * e.rate
+                    FROM
+                        exchange_rate as e
+                    WHERE
+                        e.from_currency = '{base_currency}' AND
+                        e.to_currency = a.currency
+                )
+            WHERE
+                a.account_num = {account_num}
             """
         )
         conn.execute(query)
         conn.commit()
 
         updated = get(account_num=account_num)
+
     return updated['balance']
