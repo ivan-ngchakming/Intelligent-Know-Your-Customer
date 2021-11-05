@@ -91,13 +91,3 @@ ENVIRONMENT = os.environ['ENVIRONMENT']
     ```bash
     python main.py
     ```
-
-## Contributors
-
-[Ivan](https://github.com/ivan0313)
-
-[Kelly](https://github.com/kellychl)
-
-[Kittie](https://github.com/kittietlam)
-
-[Lucas](https://github.com/lucaswmy)
