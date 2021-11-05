@@ -56,12 +56,13 @@ def fill_dummy_data():
         models.create(user_id, model_path)
 
         account1 = accounts.create(user_id, 'Current', 2000, 'HKD')
-        account2 = accounts.create(user_id, 'Savings', 9999, 'HKD')
+        account2 = accounts.create(user_id, 'Savings', 10000, 'HKD')
+        account2 = accounts.create(user_id, 'Euro', 500, 'EUR')
         account_ids += [account1['account_num'], account2['account_num']]
 
     # generate some random transactions
     now = datetime.now()
-    for i in range(random.randint(10, 20)):
+    for i in range(random.randint(15, 30)):
         now += timedelta(days=random.randint(1,10)) + timedelta(hours=random.randint(1, 10)) + timedelta(minutes=random.randint(1, 30))
         dt = now.strftime("%Y-%m-%d %H:%M:%S")
         from_account, to_account = random.sample(account_ids, 2)

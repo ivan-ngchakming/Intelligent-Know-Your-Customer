@@ -2,7 +2,7 @@ import json
 
 from PyQt5.QtCore import QObject, pyqtSlot
 from ..utils.serializer import jsonify
-from ..queries import accounts
+from ..queries import accounts, currency
 
 class Accounts(QObject):
     def __init__(self, parent=None):
@@ -15,8 +15,10 @@ class Accounts(QObject):
 
         user_id = params.get('userId')
         username = params.get('username') or None
-        result = accounts.list_accounts(user_id=user_id, username=username)
-        
+        result = accounts.list_accounts(user_id=user_id, username=username) # this is a list of dictionaries
+
+        for row in result:
+            row['currency_symbol'] = currency.get_symbol(row['currency'])
         return jsonify(result)
 
     @pyqtSlot(str, result=str)
@@ -26,5 +28,6 @@ class Accounts(QObject):
 
         account_num = params.get('accountNum')
         result = accounts.get(account_num=account_num)
-        
+        result['currency_symbol'] = currency.get_symbol(result['currency'])
+
         return jsonify(result)

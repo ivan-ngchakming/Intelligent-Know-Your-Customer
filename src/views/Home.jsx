@@ -21,7 +21,7 @@ const Home = () => {
       })
     ).then(res => {
       const data = JSON.parse(res);
-      console.log(data);
+      console.log('account data:', data);
       setAccounts(data);
     })
   };
@@ -55,7 +55,7 @@ const Home = () => {
                     }}>{account.account_type} Account</Link>
                   </TableCell>
                   <TableCell>{account.account_num}</TableCell>
-                  <TableCell>{`${account.currency} ${account.balance}`}</TableCell>
+                  <TableCell>{`${account.currency} ${account.currency_symbol}${account.balance}`}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
