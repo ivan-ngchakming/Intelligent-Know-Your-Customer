@@ -2,6 +2,8 @@
 
 Project for HKU course COMP3278 2021-22
 
+Group 30
+
 ## Project Structure
 
     .
