@@ -2,7 +2,7 @@ import {
   Box, Button, FormControl, InputAdornment, InputLabel,
   MenuItem, OutlinedInput, Select, TextField,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 
 function renderAccount(account) {
   return `${account.account_num} - ${account.account_type} (${account.currency}) - balance: ${account.currency_symbol}${account.balance.toFixed(2)}`
@@ -38,6 +38,15 @@ export default function TransactionForm({onSubmit, mode}) {
       setUserAccounts(data);
     })
   };
+
+  const currSymbol = useMemo(() => {
+    if (values.from === '' || !userAccounts)
+      return "$"
+    else {
+      const selectedAccount = userAccounts.find((account) => account.account_num === values.from)
+      return `${selectedAccount.currency} ${selectedAccount.currency_symbol}`
+    }
+  }, [values.from, userAccounts])
 
   useEffect(() => {
     fetchAccounts(userId);
@@ -93,7 +102,7 @@ export default function TransactionForm({onSubmit, mode}) {
           inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
           onChange={handleValueChange('amount')}
           type='number'
-          startAdornment={<InputAdornment position="start">$</InputAdornment>}
+          startAdornment={<InputAdornment position="start">{currSymbol}</InputAdornment>}
         />
       </FormControl>
 
