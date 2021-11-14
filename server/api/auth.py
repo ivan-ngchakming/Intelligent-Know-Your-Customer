@@ -15,6 +15,7 @@ from ..utils.serializer import jsonify
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
+
 class Auth(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -27,7 +28,6 @@ class Auth(QObject):
                 return
         
         self.recognition = Recognition(user_name)
-
 
     @pyqtSlot(str, int, result=str)
     def login(self, img_base64, user_id):
@@ -57,8 +57,6 @@ class Auth(QObject):
     @pyqtSlot(str, result=str)
     def login_history(self, req):
         params = json.loads(req)
-        print('query variables', params)
-
         result = login_history.list_all(params['user_id'])
 
         return jsonify(result)

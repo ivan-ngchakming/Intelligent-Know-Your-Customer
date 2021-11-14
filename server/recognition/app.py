@@ -4,7 +4,9 @@ import os
 
 from server.queries import models, users
 
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 class Recognition:
 	def __init__(self, user_name):
@@ -12,10 +14,8 @@ class Recognition:
 		# Load recognize and read label from model
 		self.recognizer = cv2.face.LBPHFaceRecognizer_create()
 
-
 		user_id = users.get(name=user_name)['user_id']
 		self.model_path = models.get(user_id=user_id)['path']
-		print(self.model_path)
 		self.recognizer.read(f"{self.model_path}/train.yml")
 
 		self.face_cascade = cv2.CascadeClassifier(f'{BASE_DIR}/haarcascade/haarcascade_frontalface_default.xml')
@@ -26,7 +26,6 @@ class Recognition:
 	def detect_recognize(self, img):
 		gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 		faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.5, minNeighbors=3)
-		dimensions = gray.shape
 
 		result = []
 		for (x, y, w, h) in faces:
@@ -35,7 +34,7 @@ class Recognition:
 			# predict the id and confidence for faces
 			id_, conf = self.recognizer.predict(roi_gray)
 			result.append({
-				'id': id_, 
+				'id': id_,
 				'confidence': conf,
 				'location': list(map(float, [x, y, w, h])),
 			})
