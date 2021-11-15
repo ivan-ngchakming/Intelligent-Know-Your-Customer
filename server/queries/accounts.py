@@ -1,10 +1,6 @@
-import datetime
-
-from sqlalchemy import select, insert, update, text
-from sqlalchemy import func
+from sqlalchemy import text
 
 from server.database import engine
-from server.database.tables import account_table
 
 
 # create new account and return the account details

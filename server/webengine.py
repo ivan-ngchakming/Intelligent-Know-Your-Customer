@@ -49,6 +49,7 @@ class WebEngineView(QWebEngineView):
         self.page().featurePermissionRequested.connect(self.onFeaturePermissionRequested)
 
     def onFeaturePermissionRequested(self, securityOrigin, feature):
+        """Give qt permission to use webcam"""
         self.sender().setFeaturePermission(
             securityOrigin,
             feature,

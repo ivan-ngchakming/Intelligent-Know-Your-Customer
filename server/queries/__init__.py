@@ -49,7 +49,7 @@ def fill_dummy_data():
     ]
     currency.define_rates(rates)
 
-    usernames = ['peter', 'kittie', 'ivan']
+    usernames = ['kittie', 'ivan']
     user_ids = []
     account_ids = []
 
