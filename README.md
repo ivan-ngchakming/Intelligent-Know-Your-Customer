@@ -2,7 +2,21 @@
 
 Project for HKU course COMP3278 2021-22
 
-Group 30
+## Screenshots
+
+![sign-in](./docs/sign-in.png)
+
+![home](./docs/home.png)
+
+![account](./docs/account.png)
+
+![account-calender](./docs/account-calender.png)
+
+![transaction](./docs/transaction.png)
+
+![transaction-dropdown](./docs/transaction-dropdown.png)
+
+![login-history](./docs/login-history.png)
 
 ## Project Structure
 
